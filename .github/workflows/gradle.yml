@@ -18,5 +18,8 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
 
-    - name: Run tests
-      run: ./gradlew test --no-daemon 
+    - name: Run Unit tests
+      run: ./gradlew test -PexcludeStressTests=true --no-daemon 
+
+    - name: Run stress tests
+      run: ./gradlew test -PstressTests=true --no-daemon
