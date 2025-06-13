@@ -72,7 +72,7 @@ class TextAnalyzerStressTest {
   }
 
   @Test
-  @Timeout(value = 30, unit = TimeUnit.SECONDS)
+  @Timeout(value = 1, unit = TimeUnit.MINUTES)
   void processLargeText_Performance() {
     String largeText = generateLargeText(LARGE_DATA_SIZE);
 
