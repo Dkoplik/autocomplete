@@ -3,7 +3,7 @@ package io.github.autocomplete.tokenizer;
 import java.util.stream.Stream;
 
 /**
- * Реализация токенизатора с настройками через {@link TokenizerConfig}.
+ * Реализация токенизатора с настройками фильтрации
  */
 public class SimpleTokenizer implements Tokenizer {
   private TokenizerConfig config = new TokenizerConfig();

@@ -1,0 +1,48 @@
+plugins {
+    id 'java'
+}
+
+group = 'io.github.autocomplete'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+test {
+    useJUnitPlatform {
+        excludeTags 'stress', 'performance'
+    }
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+    description = 'Runs only unit tests.'
+}
+
+task stressTest(type: Test) {
+    classpath = sourceSets.test.runtimeClasspath
+    testClassesDirs = sourceSets.test.output.classesDirs
+    useJUnitPlatform {
+        includeTags 'stress', 'performance'
+    }
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+    description = 'Runs only stress and performance tests.'
+    group = 'verification'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
