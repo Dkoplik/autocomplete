@@ -1,6 +1,5 @@
 plugins {
     id 'java'
-    id 'application'
 }
 
 group 'io.github.autocomplete'
@@ -22,6 +21,19 @@ test {
     testLogging {
         events "passed", "skipped", "failed"
     }
+    excludeTags 'stress', 'performance'
+    description = 'Runs only unit tests.'
+}
+
+task stressTest(type: Test) {
+    useJUnitPlatform {
+        includeTags 'stress', 'performance'
+    }
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+    description = 'Runs only stress and performance tests.'
+    group = 'verification'
 }
 
 java {
