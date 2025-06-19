@@ -17,11 +17,12 @@ dependencies {
 }
 
 test {
-    useJUnitPlatform()
+    useJUnitPlatform {
+        excludeTags 'stress', 'performance'
+    }
     testLogging {
         events "passed", "skipped", "failed"
     }
-    excludeTags 'stress', 'performance'
     description = 'Runs only unit tests.'
 }
 
