@@ -18,8 +18,9 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
       - name: Ensure Gradle cache directories exist
-        run: mkdir -p ~/.gradle/caches
-        run: mkdir -p ~/.gradle/wrapper
+        run: |
+          mkdir -p ~/.gradle/caches
+          mkdir -p ~/.gradle/wrapper
       - name: Cache Gradle packages
         uses: actions/cache@v4
         with:
@@ -49,8 +50,9 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
       - name: Ensure Gradle cache directories exist
-        run: mkdir -p ~/.gradle/caches
-        run: mkdir -p ~/.gradle/wrapper
+        run: |
+          mkdir -p ~/.gradle/caches
+          mkdir -p ~/.gradle/wrapper
       - name: Cache Gradle packages
         uses: actions/cache@v4
         with:
