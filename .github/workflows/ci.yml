@@ -76,11 +76,9 @@ jobs:
         with:
           name: stress-test-results
           path: ./logs/stress-test.log
-      - name: Ensure Gradle reports directory exist
-        run: mkdir -p .gradle/reports
       - name: Upload Gradle Problems Report
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: gradle-problems-report
-          path: .gradle/reports/
+          path: ./build/reports/problems/
