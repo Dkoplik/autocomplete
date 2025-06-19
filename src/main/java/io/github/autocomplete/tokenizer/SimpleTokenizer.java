@@ -3,7 +3,7 @@ package io.github.autocomplete.tokenizer;
 import java.util.stream.Stream;
 
 /**
- * Реализация токенизатора с настройками фильтрации
+ * Реализация токенизатора с настройками через {@link TokenizerConfig}.
  */
 public class SimpleTokenizer implements Tokenizer {
   private TokenizerConfig config = new TokenizerConfig();
@@ -12,6 +12,7 @@ public class SimpleTokenizer implements Tokenizer {
    * Разбить текст на токены
    * 
    * @param text Текст, который необходимо разбить на токены
+   * @return Stream токенов
    */
   @Override
   public Stream<String> tokenize(String text) {
@@ -26,19 +27,18 @@ public class SimpleTokenizer implements Tokenizer {
    * Обработать полученное слово, убрав знаки пунктуации и прочие символы.
    * 
    * @param word Слово для обработки
+   * @return Обработанное слово
    */
   private String processWord(String word) {
-    StringBuilder sb = new StringBuilder();
-    for (char c : word.toCharArray()) {
-      if (config.getCharFilter().test(c)) {
-        sb.append(config.isToLowerCase() ? Character.toLowerCase(c) : c);
-      }
-    }
-    return sb.toString();
+    return word.chars().mapToObj(c -> (char) c).filter(c -> config.getCharFilter().test(c))
+        .map(c -> config.isToLowerCase() ? Character.toLowerCase(c) : c)
+        .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append).toString();
   }
 
   /**
    * Установить настройки токенизации
+   * 
+   * @param config Настройки токенизации
    */
   @Override
   public void setConfig(TokenizerConfig config) {
@@ -47,6 +47,8 @@ public class SimpleTokenizer implements Tokenizer {
 
   /**
    * Получить текущие настройки токенизации
+   * 
+   * @return Текущие настройки токенизации
    */
   @Override
   public TokenizerConfig getConfig() {
