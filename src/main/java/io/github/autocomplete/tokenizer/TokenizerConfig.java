@@ -44,7 +44,6 @@ public class TokenizerConfig {
     /**
      * @return Предикат для фильтрации, выбирает, какие символы оставлять
      */
-
     public Predicate<Character> getCharFilter() {
         return charFilter;
     }
