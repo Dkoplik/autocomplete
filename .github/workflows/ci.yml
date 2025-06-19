@@ -17,6 +17,9 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
+      - name: Ensure Gradle cache directories exist
+        run: mkdir -p ~/.gradle/caches
+        run: mkdir -p ~/.gradle/wrapper
       - name: Cache Gradle packages
         uses: actions/cache@v4
         with:
@@ -45,6 +48,9 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
+      - name: Ensure Gradle cache directories exist
+        run: mkdir -p ~/.gradle/caches
+        run: mkdir -p ~/.gradle/wrapper
       - name: Cache Gradle packages
         uses: actions/cache@v4
         with:
@@ -52,17 +58,25 @@ jobs:
             ~/.gradle/caches
             ~/.gradle/wrapper
           key: gradle-${{ runner.os }}-${{ hashFiles('**/build.gradle', '**/gradle-wrapper.properties') }}
+      - name: Create logs directory
+        run: mkdir -p ./logs
       - name: Run Unit Tests
-        run: ./gradlew test --no-daemon | tee logs/unit-test.log
+        run: ./gradlew test --no-daemon | tee ./logs/unit-test.log
       - name: Upload Unit Test Results
         uses: actions/upload-artifact@v4
         with:
           name: unit-test-results
           path: ./logs/unit-test.log
       - name: Run Stress Tests
-        run: ./gradlew stressTest --no-daemon | tee logs/stress-test.log
+        run: ./gradlew stressTest --no-daemon | tee ./logs/stress-test.log
       - name: Upload Stress Test Results
         uses: actions/upload-artifact@v4
         with:
           name: stress-test-results
           path: ./logs/stress-test.log
+      - name: Upload Gradle Problems Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gradle-problems-report
+          path: .gradle/reports/
