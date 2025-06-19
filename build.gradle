@@ -25,6 +25,8 @@ test {
 }
 
 task stressTest(type: Test) {
+    classpath = sourceSets.test.runtimeClasspath
+    testClassesDirs = sourceSets.test.output.classesDirs
     useJUnitPlatform {
         includeTags 'stress', 'performance'
     }
