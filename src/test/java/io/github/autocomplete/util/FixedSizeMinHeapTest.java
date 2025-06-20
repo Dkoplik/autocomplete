@@ -17,11 +17,11 @@ class FixedSizeMinHeapTest {
 
   @Test
   void add_WhenHeapNotFull_AddsElements() {
-    heap.add(new Candidate("A", 5));
-    heap.add(new Candidate("B", 3));
-    heap.add(new Candidate("C", 7));
+    heap.add(new WordFrequency("A", 5));
+    heap.add(new WordFrequency("B", 3));
+    heap.add(new WordFrequency("C", 7));
 
-    List<Candidate> result = heap.toSortedList();
+    List<WordFrequency> result = heap.toSortedList();
     assertEquals(3, result.size());
     assertEquals("C", result.get(0).word());
     assertEquals("A", result.get(1).word());
@@ -30,12 +30,12 @@ class FixedSizeMinHeapTest {
 
   @Test
   void add_WhenNewElementLargerThanMin_ReplacesMin() {
-    heap.add(new Candidate("A", 5));
-    heap.add(new Candidate("B", 3));
-    heap.add(new Candidate("C", 7));
-    heap.add(new Candidate("D", 6)); 
+    heap.add(new WordFrequency("A", 5));
+    heap.add(new WordFrequency("B", 3));
+    heap.add(new WordFrequency("C", 7));
+    heap.add(new WordFrequency("D", 6));
 
-    List<Candidate> result = heap.toSortedList();
+    List<WordFrequency> result = heap.toSortedList();
     assertEquals(3, result.size());
     assertEquals("C", result.get(0).word());
     assertEquals("D", result.get(1).word());
@@ -44,23 +44,23 @@ class FixedSizeMinHeapTest {
 
   @Test
   void add_WhenNewElementSmallerThanMin_KeepsHeap() {
-    heap.add(new Candidate("A", 5));
-    heap.add(new Candidate("B", 3));
-    heap.add(new Candidate("C", 7));
-    heap.add(new Candidate("D", 2)); 
+    heap.add(new WordFrequency("A", 5));
+    heap.add(new WordFrequency("B", 3));
+    heap.add(new WordFrequency("C", 7));
+    heap.add(new WordFrequency("D", 2));
 
-    List<Candidate> result = heap.toSortedList();
+    List<WordFrequency> result = heap.toSortedList();
     assertEquals(3, result.size());
     assertFalse(result.stream().anyMatch(c -> "D".equals(c.word())));
   }
 
   @Test
   void add_WithSameFrequencyDifferentWords_OrdersCorrectly() {
-    heap.add(new Candidate("A", 5));
-    heap.add(new Candidate("B", 5));
-    heap.add(new Candidate("C", 5));
+    heap.add(new WordFrequency("A", 5));
+    heap.add(new WordFrequency("B", 5));
+    heap.add(new WordFrequency("C", 5));
 
-    List<Candidate> result = heap.toSortedList();
+    List<WordFrequency> result = heap.toSortedList();
     assertEquals("A", result.get(0).word());
     assertEquals("B", result.get(1).word());
     assertEquals("C", result.get(2).word());
@@ -68,11 +68,11 @@ class FixedSizeMinHeapTest {
 
   @Test
   void toSortedList_ReturnsDescendingOrder() {
-    heap.add(new Candidate("C", 7));
-    heap.add(new Candidate("A", 5));
-    heap.add(new Candidate("B", 3));
+    heap.add(new WordFrequency("C", 7));
+    heap.add(new WordFrequency("A", 5));
+    heap.add(new WordFrequency("B", 3));
 
-    List<Candidate> result = heap.toSortedList();
+    List<WordFrequency> result = heap.toSortedList();
     assertEquals(7, result.get(0).frequency());
     assertEquals(5, result.get(1).frequency());
     assertEquals(3, result.get(2).frequency());
@@ -81,28 +81,28 @@ class FixedSizeMinHeapTest {
   @Test
   void add_WhenHeapSizeZero_IgnoresElements() {
     FixedSizeMinHeap emptyHeap = new FixedSizeMinHeap(0);
-    emptyHeap.add(new Candidate("A", 5));
+    emptyHeap.add(new WordFrequency("A", 5));
     assertTrue(emptyHeap.toSortedList().isEmpty());
   }
 
   @Test
   void add_WhenHeapSizeOne_MaintainsSingleElement() {
     FixedSizeMinHeap singleHeap = new FixedSizeMinHeap(1);
-    singleHeap.add(new Candidate("A", 5));
-    singleHeap.add(new Candidate("B", 10));
+    singleHeap.add(new WordFrequency("A", 5));
+    singleHeap.add(new WordFrequency("B", 10));
 
-    List<Candidate> result = singleHeap.toSortedList();
+    List<WordFrequency> result = singleHeap.toSortedList();
     assertEquals(1, result.size());
     assertEquals("B", result.get(0).word());
   }
 
   @Test
   void add_WithEqualElements_HandlesCorrectly() {
-    heap.add(new Candidate("A", 5));
-    heap.add(new Candidate("A", 5)); 
-    heap.add(new Candidate("B", 5));
+    heap.add(new WordFrequency("A", 5));
+    heap.add(new WordFrequency("A", 5));
+    heap.add(new WordFrequency("B", 5));
 
-    List<Candidate> result = heap.toSortedList();
+    List<WordFrequency> result = heap.toSortedList();
     assertEquals(3, result.size());
     assertEquals("A", result.get(0).word());
     assertEquals("A", result.get(1).word());

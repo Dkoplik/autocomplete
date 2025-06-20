@@ -8,7 +8,7 @@ import java.util.List;
  * Реализация кучи фиксированного размера для эффективного поиска top-N элементов
  */
 public class FixedSizeMinHeap {
-  private final List<Candidate> heap;
+  private final List<WordFrequency> heap;
   private final int maxSize;
 
   /**
@@ -24,14 +24,14 @@ public class FixedSizeMinHeap {
   /**
    * Добавляет элемент в кучу, сохраняя свойства кучи
    * 
-   * @param candidate Элемент для добавления
+   * @param wordFrequency Элемент для добавления
    */
-  public void add(Candidate candidate) {
+  public void add(WordFrequency wordFrequency) {
     if (heap.size() < maxSize) {
-      heap.add(candidate);
+      heap.add(wordFrequency);
       siftUp(heap.size() - 1);
-    } else if ((maxSize > 0) && (candidate.compareTo(heap.get(0)) > 0)) {
-      heap.set(0, candidate);
+    } else if ((maxSize > 0) && (wordFrequency.compareTo(heap.get(0)) > 0)) {
+      heap.set(0, wordFrequency);
       siftDown(0);
     }
   }
@@ -41,8 +41,8 @@ public class FixedSizeMinHeap {
    * 
    * @return Отсортированный список элементов
    */
-  public List<Candidate> toSortedList() {
-    List<Candidate> sorted = new ArrayList<>(heap);
+  public List<WordFrequency> toSortedList() {
+    List<WordFrequency> sorted = new ArrayList<>(heap);
     Collections.sort(sorted, Collections.reverseOrder());
     return sorted;
   }
