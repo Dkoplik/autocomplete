@@ -6,16 +6,17 @@ import java.util.function.Predicate;
 
 import org.junit.jupiter.api.Test;
 
+// Есть ли смысл тестировать record TokenizerConfig?
 class TokenizerConfigTest {
 
   @Test
   void defaultConstructor_SetsExpectedValues() {
     TokenizerConfig config = new TokenizerConfig();
 
-    assertEquals("\\s+", config.getSplitRegex());
-    assertTrue(config.getCharFilter().test('a'));
-    assertFalse(config.getCharFilter().test('1'));
-    assertTrue(config.isToLowerCase());
+    assertEquals("\\s+", config.splitRegex());
+    assertTrue(config.charFilter().test('a'));
+    assertFalse(config.charFilter().test('1'));
+    assertTrue(config.toLowerCase());
   }
 
   @Test
@@ -23,8 +24,8 @@ class TokenizerConfigTest {
     Predicate<Character> customFilter = c -> c == 'a';
     TokenizerConfig config = new TokenizerConfig(",", customFilter, false);
 
-    assertEquals(",", config.getSplitRegex());
-    assertSame(customFilter, config.getCharFilter());
-    assertFalse(config.isToLowerCase());
+    assertEquals(",", config.splitRegex());
+    assertSame(customFilter, config.charFilter());
+    assertFalse(config.toLowerCase());
   }
 }
