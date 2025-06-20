@@ -13,7 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
-import io.github.autocomplete.util.Candidate;
+import io.github.autocomplete.util.WordFrequency;
 
 /**
  * Стресс-тесты для реализации префиксного дерева (Trie)
@@ -106,7 +106,7 @@ class TrieStressTest {
       String prefix = prefixes.get(random.nextInt(prefixes.size()));
 
       long startTime = System.nanoTime();
-      List<Candidate> completions = trie.findCompletions(prefix, COMPLETION_LIMIT);
+      List<WordFrequency> completions = trie.findCompletions(prefix, COMPLETION_LIMIT);
       totalDuration += System.nanoTime() - startTime;
 
       assertNotNull(completions);
@@ -127,7 +127,7 @@ class TrieStressTest {
     }
 
     long startTime = System.nanoTime();
-    List<Candidate> topWords = trie.getTopFrequentWords(TOP_WORDS_LIMIT);
+    List<WordFrequency> topWords = trie.getTopFrequentWords(TOP_WORDS_LIMIT);
     long duration = System.nanoTime() - startTime;
 
     System.out.printf("getTopFrequentWords(%,d) took: %d ms%n", TOP_WORDS_LIMIT,
@@ -232,10 +232,10 @@ class TrieStressTest {
     }
   }
 
-  private void assertSortedByFrequency(List<Candidate> candidates) {
+  private void assertSortedByFrequency(List<WordFrequency> candidates) {
     for (int i = 0; i < candidates.size() - 1; i++) {
-      Candidate current = candidates.get(i);
-      Candidate next = candidates.get(i + 1);
+      WordFrequency current = candidates.get(i);
+      WordFrequency next = candidates.get(i + 1);
 
       assertTrue(current.frequency() >= next.frequency(),
           "Candidates not sorted by frequency: " + current + " before " + next);

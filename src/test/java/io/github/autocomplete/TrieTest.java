@@ -2,7 +2,7 @@ package io.github.autocomplete;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import io.github.autocomplete.util.Candidate;
+import io.github.autocomplete.util.WordFrequency;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -48,6 +48,69 @@ class TrieTest {
   }
 
   @Test
+  void remove_TrulyDelete_RemovesWordAndPrunesNodes() {
+    trie.insert("car");
+    trie.insert("cart");
+    trie.insert("carpet");
+    trie.insert("cat");
+    trie.insert("dog");
+
+    // Remove 'carpet' with trulyDelete
+    trie.remove("carpet", true);
+    assertEquals(0, trie.getFrequency("carpet"));
+    // Other words with shared prefix remain
+    assertEquals(1, trie.getFrequency("car"));
+    assertEquals(1, trie.getFrequency("cart"));
+    assertEquals(1, trie.getFrequency("cat"));
+    assertEquals(1, trie.getFrequency("dog"));
+
+    // Remove 'cart' with trulyDelete
+    trie.remove("cart", true);
+    assertEquals(0, trie.getFrequency("cart"));
+    assertEquals(1, trie.getFrequency("car"));
+    assertEquals(1, trie.getFrequency("cat"));
+    assertEquals(1, trie.getFrequency("dog"));
+
+    // Remove 'car' with trulyDelete (should prune 'car' branch if no other words)
+    trie.remove("car", true);
+    assertEquals(0, trie.getFrequency("car"));
+    assertEquals(1, trie.getFrequency("cat"));
+    assertEquals(1, trie.getFrequency("dog"));
+
+    // Remove 'cat' with trulyDelete
+    trie.remove("cat", true);
+    assertEquals(0, trie.getFrequency("cat"));
+    assertEquals(1, trie.getFrequency("dog"));
+
+    // Remove 'dog' with trulyDelete
+    trie.remove("dog", true);
+    assertEquals(0, trie.getFrequency("dog"));
+    // Trie should now be empty
+    assertTrue(trie.getAllWords().isEmpty());
+  }
+
+  @Test
+  void remove_TrulyDelete_ReinsertAfterDeletion() {
+    trie.insert("hello");
+    trie.remove("hello", true);
+    assertEquals(0, trie.getFrequency("hello"));
+    trie.insert("hello");
+    assertEquals(1, trie.getFrequency("hello"));
+  }
+
+  @Test
+  void clear_RemovesAllWords() {
+    trie.insert("one");
+    trie.insert("two");
+    trie.insert("three");
+    trie.clear();
+    assertTrue(trie.getAllWords().isEmpty());
+    assertEquals(0, trie.getFrequency("one"));
+    assertEquals(0, trie.getFrequency("two"));
+    assertEquals(0, trie.getFrequency("three"));
+  }
+
+  @Test
   void getAllWords_ReturnsCompleteWordList() {
     trie.insert("apple");
     trie.insert("apple");
@@ -75,7 +138,7 @@ class TrieTest {
     trie.insert("app");
     trie.insert("banana");
 
-    List<Candidate> completions = trie.findCompletions("app", 10);
+    List<WordFrequency> completions = trie.findCompletions("app", 10);
     assertEquals(3, completions.size());
     assertEquals("application", completions.get(0).word());
     assertEquals(3, completions.get(0).frequency());
@@ -84,7 +147,7 @@ class TrieTest {
     assertEquals("app", completions.get(2).word());
     assertEquals(1, completions.get(2).frequency());
 
-    List<Candidate> limited = trie.findCompletions("app", 2);
+    List<WordFrequency> limited = trie.findCompletions("app", 2);
     assertEquals(2, limited.size());
     assertEquals("application", limited.get(0).word());
     assertEquals("apple", limited.get(1).word());
@@ -104,7 +167,7 @@ class TrieTest {
     trie.insert("banana");
     trie.insert("cherry");
 
-    List<Candidate> completions = trie.findCompletions("", 10);
+    List<WordFrequency> completions = trie.findCompletions("", 10);
     assertEquals(3, completions.size());
   }
 
@@ -122,7 +185,7 @@ class TrieTest {
     trie.insert("elderberry");
 
     // Топ-3
-    List<Candidate> top3 = trie.getTopFrequentWords(3);
+    List<WordFrequency> top3 = trie.getTopFrequentWords(3);
     assertEquals(3, top3.size());
     assertEquals("apple", top3.get(0).word());
     assertEquals(3, top3.get(0).frequency());
@@ -132,7 +195,7 @@ class TrieTest {
     assertEquals(2, top3.get(2).frequency());
 
     // Топ-1
-    List<Candidate> top1 = trie.getTopFrequentWords(1);
+    List<WordFrequency> top1 = trie.getTopFrequentWords(1);
     assertEquals(1, top1.size());
     assertEquals("apple", top1.get(0).word());
   }
@@ -145,7 +208,7 @@ class TrieTest {
     trie.insert("banana");
     trie.insert("cherry");
 
-    List<Candidate> top = trie.getTopFrequentWords(10);
+    List<WordFrequency> top = trie.getTopFrequentWords(10);
     assertEquals(3, top.size());
     assertEquals("apple", top.get(0).word());
     assertEquals("banana", top.get(1).word());
@@ -157,7 +220,7 @@ class TrieTest {
     trie.insert("a");
     trie.insert("b");
 
-    List<Candidate> result = trie.getTopFrequentWords(10);
+    List<WordFrequency> result = trie.getTopFrequentWords(10);
     assertEquals(2, result.size());
   }
 
@@ -187,13 +250,13 @@ class TrieTest {
     trie.remove("runner");
     assertEquals(0, trie.getFrequency("runner"));
 
-    List<Candidate> completions = trie.findCompletions("run", 10);
+    List<WordFrequency> completions = trie.findCompletions("run", 10);
     assertEquals(3, completions.size()); // run, running, runs
 
     // runner не возвращается
     assertFalse(completions.stream().anyMatch(c -> "runner".equals(c.word())));
 
-    List<Candidate> top = trie.getTopFrequentWords(2);
+    List<WordFrequency> top = trie.getTopFrequentWords(2);
     assertEquals(2, top.size());
     assertEquals("run", top.get(0).word());
     assertEquals(2, top.get(0).frequency());
@@ -219,7 +282,7 @@ class TrieTest {
     assertEquals(1, trie.getFrequency("apple"));
     assertEquals(1, trie.getFrequency("APPLE"));
 
-    List<Candidate> completions = trie.findCompletions("a", 10);
+    List<WordFrequency> completions = trie.findCompletions("a", 10);
     assertEquals(1, completions.size());
     assertEquals("apple", completions.get(0).word());
   }
