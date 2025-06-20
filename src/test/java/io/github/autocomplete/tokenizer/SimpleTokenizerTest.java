@@ -55,10 +55,8 @@ class SimpleTokenizerTest {
 
   @Test
   void tokenize_WithCustomCharFilter_IncludesNumbers() {
-    TokenizerConfig config = new TokenizerConfig(
-        "\\s+",
-        c -> Character.isLetter(c) || Character.isDigit(c),
-        true);
+    TokenizerConfig config =
+        new TokenizerConfig("\\s+", c -> Character.isLetter(c) || Character.isDigit(c), true);
     tokenizer.setConfig(config);
 
     String input = "Item123 45.6% price_$99";
@@ -87,7 +85,7 @@ class SimpleTokenizerTest {
   }
 
   @ParameterizedTest
-  @ValueSource(strings = { "!@#$%^&*()", "123.456", "  \t\n  " })
+  @ValueSource(strings = {"!@#$%^&*()", "123.456", "  \t\n  "})
   void tokenize_NoValidCharacters_ReturnsEmptyStream(String input) {
     assertTrue(tokenizer.tokenize(input).collect(Collectors.toList()).isEmpty());
   }
@@ -109,10 +107,8 @@ class SimpleTokenizerTest {
     assertEquals(List.of("test"), initialTokens);
 
     // Меняем конфигурацию
-    TokenizerConfig newConfig = new TokenizerConfig(
-        "\\s+",
-        c -> Character.isLetterOrDigit(c),
-        false);
+    TokenizerConfig newConfig =
+        new TokenizerConfig("\\s+", c -> Character.isLetterOrDigit(c), false);
     tokenizer.setConfig(newConfig);
 
     List<String> newTokens = tokenizer.tokenize(input).collect(Collectors.toList());
@@ -122,14 +118,14 @@ class SimpleTokenizerTest {
   @Test
   void getConfig_ReturnsCurrentConfiguration() {
     TokenizerConfig defaultConfig = tokenizer.getConfig();
-    assertEquals("\\s+", defaultConfig.getSplitRegex());
-    assertTrue(defaultConfig.isToLowerCase());
+    assertEquals("\\s+", defaultConfig.splitRegex());
+    assertTrue(defaultConfig.toLowerCase());
 
     TokenizerConfig newConfig = new TokenizerConfig(",", Character::isDigit, false);
     tokenizer.setConfig(newConfig);
 
     TokenizerConfig retrievedConfig = tokenizer.getConfig();
-    assertEquals(",", retrievedConfig.getSplitRegex());
-    assertFalse(retrievedConfig.isToLowerCase());
+    assertEquals(",", retrievedConfig.splitRegex());
+    assertFalse(retrievedConfig.toLowerCase());
   }
 }
