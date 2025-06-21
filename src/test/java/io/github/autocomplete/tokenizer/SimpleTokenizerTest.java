@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 class SimpleTokenizerTest {
@@ -20,10 +19,14 @@ class SimpleTokenizerTest {
     tokenizer = new SimpleTokenizer();
   }
 
-  @ParameterizedTest
-  @NullAndEmptySource
-  void tokenize_NullOrEmptyInput_ReturnsEmptyStream(String input) {
-    assertTrue(tokenizer.tokenize(input).collect(Collectors.toList()).isEmpty());
+  @Test
+  void tokenize_NullInput_ThrowsException() {
+    assertThrows(IllegalArgumentException.class, () -> tokenizer.tokenize(null));
+  }
+
+  @Test
+  void tokenize_EmptyInput_ReturnsEmptyStream() {
+    assertTrue(tokenizer.tokenize("").collect(Collectors.toList()).isEmpty());
   }
 
   @Test

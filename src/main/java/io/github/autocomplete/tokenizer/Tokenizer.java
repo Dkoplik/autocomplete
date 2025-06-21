@@ -10,7 +10,10 @@ public interface Tokenizer {
    * Разбить текст на токены
    * 
    * @param text Текст, который необходимо разбить на токены
+   * 
    * @return Stream токенов
+   * 
+   * @throws IllegalArgumentException Если text равен null
    */
   Stream<String> tokenize(String text);
 
@@ -18,6 +21,8 @@ public interface Tokenizer {
    * Установить настройки токенизации
    * 
    * @param config Настройки токенизации
+   * 
+   * @throws IllegalArgumentException Если config равен null
    */
   void setConfig(TokenizerConfig config);
 

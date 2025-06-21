@@ -14,14 +14,25 @@ import java.util.function.BiFunction;
 class Trie {
   private final TrieNode root;
 
+  /**
+   * Создаёт пустое дерево.
+   */
   public Trie() {
     this.root = new TrieNode();
   }
 
   /**
-   * Вставляет слово в дерево, увеличивая его частоту на 1
+   * Вставляет слово в дерево, увеличивая его частоту на 1.
+   * 
+   * @param word Слово для вставки
+   * 
+   * @throws IllegalArgumentException Если word равен null или пустой строке
    */
   public void insert(String word) {
+    if (word == null || word.isEmpty()) {
+      throw new IllegalArgumentException("word cannot be null or empty");
+    }
+
     TrieNode current = root;
     for (char c : word.toCharArray()) {
       Map<Character, TrieNode> children = current.getChildren();
@@ -36,20 +47,37 @@ class Trie {
   }
 
   /**
-   * Возвращает частоту слова (сколько раз оно было добавлено)
+   * Возвращает частоту слова (сколько раз оно было добавлено).
+   * 
+   * @param word Слово для поиска
+   * 
+   * @return Частота слова
+   * 
+   * @throws IllegalArgumentException Если word равен null или пустой строке
    */
   public int getFrequency(String word) {
+    if (word == null || word.isEmpty()) {
+      throw new IllegalArgumentException("word cannot be null or empty");
+    }
+
     TrieNode node = getNode(word);
     return node != null ? node.getFrequency() : 0;
   }
 
   /**
-   * Удаляет слово из дерева (устанавливает частоту в 0 или полностью удаляет, если trulyDelete)
+   * Удаляет слово из дерева (устанавливает частоту в 0 или полностью удаляет, если trulyDelete).
    * 
    * @param word Слово для удаления
+   * 
    * @param trulyDelete Если true, полностью удаляет слово и неиспользуемые узлы
+   * 
+   * @throws IllegalArgumentException Если word равен null или пустой строке
    */
   public void remove(String word, boolean trulyDelete) {
+    if (word == null || word.isEmpty()) {
+      throw new IllegalArgumentException("word cannot be null or empty");
+    }
+
     if (!trulyDelete) {
       TrieNode node = getNode(word);
       if (node != null) {
@@ -61,14 +89,18 @@ class Trie {
   }
 
   /**
-   * Удаляет слово из дерева (устанавливает частоту в 0)
+   * Удаляет слово из дерева (устанавливает частоту в 0).
+   * 
+   * @param word Слово для удаления
+   * 
+   * @throws IllegalArgumentException Если word равен null или пустой строке
    */
   public void remove(String word) {
     remove(word, false);
   }
 
   /**
-   * Рекурсивно удаляет слово и "обрезает" неиспользуемые узлы
+   * Рекурсивно удаляет слово и "обрезает" неиспользуемые узлы.
    * 
    * @return true, если текущий узел можно удалить из родителя
    */
@@ -92,7 +124,11 @@ class Trie {
   }
 
   /**
-   * Возвращает узел, соответствующий данному слову
+   * Возвращает узел, соответствующий данному слову.
+   * 
+   * @param word Слово для поиска
+   * 
+   * @return Узел, соответствующий данному слову
    */
   private TrieNode getNode(String word) {
     TrieNode current = root;
@@ -107,7 +143,9 @@ class Trie {
   }
 
   /**
-   * Возвращает все слова с их частотами
+   * Возвращает все слова с их частотами.
+   * 
+   * @return Все слова с их частотами
    */
   public Map<String, Integer> getAllWords() {
     Map<String, Integer> words = new HashMap<>();
@@ -128,13 +166,24 @@ class Trie {
   }
 
   /**
-   * Ищет автодополнения для префикса
+   * Ищет автодополнения для префикса (без учёта опечаток).
    * 
    * @param prefix Префикс для поиска
+   * 
    * @param limit Максимальное количество результатов
+   * 
    * @return Список кандидатов, отсортированных по частоте
+   * 
+   * @throws IllegalArgumentException Если prefix равен null или пустой строке ИЛИ limit меньше 1
    */
   public List<WordFrequency> findCompletions(String prefix, int limit) {
+    if (prefix == null || prefix.isEmpty()) {
+      throw new IllegalArgumentException("prefix cannot be null or empty");
+    }
+    if (limit < 1) {
+      throw new IllegalArgumentException("limit cannot be less than 1");
+    }
+
     TrieNode node = getNode(prefix);
     if (node == null) {
       return Collections.emptyList();
@@ -159,14 +208,17 @@ class Trie {
   }
 
   /**
-   * Возвращает топ-N самых частых слов
+   * Возвращает топ-N самых частых слов.
    * 
    * @param n Количество возвращаемых слов
+   * 
    * @return Список WordFrequency, отсортированных по частоте (от наиболее к наименее частому)
+   * 
+   * @throws IllegalArgumentException Если n меньше или равно 0
    */
   public List<WordFrequency> getTopFrequentWords(int n) {
     if (n <= 0) {
-      return Collections.emptyList();
+      throw new IllegalArgumentException("n cannot be less than or equal to 0");
     }
 
     FixedSizeMinHeap heap = new FixedSizeMinHeap(n);
@@ -187,7 +239,7 @@ class Trie {
   }
 
   /**
-   * Очищает всё дерево, удаляя все слова и частоты
+   * Очищает всё дерево, удаляя все слова и частоты.
    */
   public void clear() {
     root.getChildren().clear();
@@ -197,9 +249,35 @@ class Trie {
   /**
    * Возвращает список префиксов в дереве, находящихся на расстоянии <= tolerance от заданного
    * префикса. Для коротких префиксов (длина < threshold) возвращает только точные совпадения.
+   * 
+   * @param prefix Префикс для поиска
+   * 
+   * @param tolerance Максимальное расстояние между строками
+   * 
+   * @param threshold Пороговое значение длины строки, для которой применяется толерантность
+   * 
+   * @param distanceFunction Функция расстояния между двумя строками
+   * 
+   * @return Список префиксов, находящихся на расстоянии <= tolerance от заданного префикса
+   * 
+   * @throws IllegalArgumentException Если prefix равен null или пустой строке ИЛИ tolerance меньше
+   *         0 ИЛИ threshold меньше 0 ИЛИ distanceFunction равен null
    */
   public List<String> findSimilarPrefixes(String prefix, int tolerance, int threshold,
       BiFunction<String, String, Integer> distanceFunction) {
+    if (prefix == null || prefix.isEmpty()) {
+      throw new IllegalArgumentException("prefix cannot be null or empty");
+    }
+    if (tolerance < 0) {
+      throw new IllegalArgumentException("tolerance cannot be negative");
+    }
+    if (threshold < 0) {
+      throw new IllegalArgumentException("threshold cannot be negative");
+    }
+    if (distanceFunction == null) {
+      throw new IllegalArgumentException("distanceFunction cannot be null");
+    }
+
     List<String> result = new java.util.ArrayList<>();
     if (prefix.length() < threshold) {
       TrieNode node = getNode(prefix);

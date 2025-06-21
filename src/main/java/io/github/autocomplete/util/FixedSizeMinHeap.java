@@ -15,8 +15,14 @@ public class FixedSizeMinHeap {
    * Создает кучу с указанным максимальным размером
    * 
    * @param maxSize Максимальное количество элементов в куче
+   * 
+   * @throws IllegalArgumentException Если maxSize меньше 0
    */
   public FixedSizeMinHeap(int maxSize) {
+    if (maxSize < 0) {
+      throw new IllegalArgumentException("maxSize cannot be less than 0");
+    }
+
     this.maxSize = maxSize;
     this.heap = new ArrayList<>();
   }
@@ -25,8 +31,14 @@ public class FixedSizeMinHeap {
    * Добавляет элемент в кучу, сохраняя свойства кучи
    * 
    * @param wordFrequency Элемент для добавления
+   * 
+   * @throws IllegalArgumentException Если wordFrequency равен null
    */
   public void add(WordFrequency wordFrequency) {
+    if (wordFrequency == null) {
+      throw new IllegalArgumentException("wordFrequency cannot be null");
+    }
+
     if (heap.size() < maxSize) {
       heap.add(wordFrequency);
       siftUp(heap.size() - 1);

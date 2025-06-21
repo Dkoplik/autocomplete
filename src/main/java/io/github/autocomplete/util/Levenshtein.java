@@ -1,12 +1,17 @@
 package io.github.autocomplete.util;
 
+/**
+ * Класс для вычисления расстояния Левенштейна между двумя строками.
+ */
 public class Levenshtein {
   /**
-   * Calculate the Levenshtein distance between two strings.
+   * Вычисляет расстояние Левенштейна между двумя строками.
    * 
-   * @param a first string
-   * @param b second string
-   * @return Levenshtein distance
+   * @param a Первая строка
+   * 
+   * @param b Вторая строка
+   * 
+   * @return Расстояние Левенштейна
    */
   public static int distance(String a, String b) {
     int m = a.length(), n = b.length();

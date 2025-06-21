@@ -30,9 +30,8 @@ class TrieTest {
   }
 
   @Test
-  void insert_EmptyString_HandledCorrectly() {
-    trie.insert("");
-    assertEquals(1, trie.getFrequency(""));
+  void insert_EmptyString_ThrowsException() {
+    assertThrows(IllegalArgumentException.class, () -> trie.insert(""));
   }
 
   @Test
@@ -162,13 +161,12 @@ class TrieTest {
   }
 
   @Test
-  void findCompletions_EmptyPrefix_ReturnsAllWords() {
+  void findCompletions_EmptyPrefix_ThrowsException() {
     trie.insert("apple");
     trie.insert("banana");
     trie.insert("cherry");
 
-    List<WordFrequency> completions = trie.findCompletions("", 10);
-    assertEquals(3, completions.size());
+    assertThrows(IllegalArgumentException.class, () -> trie.findCompletions("", 10));
   }
 
   @Test
@@ -225,11 +223,11 @@ class TrieTest {
   }
 
   @Test
-  void getTopFrequentWords_WithZeroOrNegativeLimit_ReturnsEmptyList() {
+  void getTopFrequentWords_WithZeroOrNegativeLimit_ThrowsException() {
     trie.insert("apple");
 
-    assertTrue(trie.getTopFrequentWords(0).isEmpty());
-    assertTrue(trie.getTopFrequentWords(-1).isEmpty());
+    assertThrows(IllegalArgumentException.class, () -> trie.getTopFrequentWords(0));
+    assertThrows(IllegalArgumentException.class, () -> trie.getTopFrequentWords(-1));
   }
 
   @Test
