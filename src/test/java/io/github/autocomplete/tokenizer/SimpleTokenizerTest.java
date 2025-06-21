@@ -118,14 +118,14 @@ class SimpleTokenizerTest {
   @Test
   void getConfig_ReturnsCurrentConfiguration() {
     TokenizerConfig defaultConfig = tokenizer.getConfig();
-    assertEquals("\\s+", defaultConfig.getSplitRegex());
-    assertTrue(defaultConfig.isToLowerCase());
+    assertEquals("\\s+", defaultConfig.splitRegex());
+    assertTrue(defaultConfig.toLowerCase());
 
     TokenizerConfig newConfig = new TokenizerConfig(",", Character::isDigit, false);
     tokenizer.setConfig(newConfig);
 
     TokenizerConfig retrievedConfig = tokenizer.getConfig();
-    assertEquals(",", retrievedConfig.getSplitRegex());
-    assertFalse(retrievedConfig.isToLowerCase());
+    assertEquals(",", retrievedConfig.splitRegex());
+    assertFalse(retrievedConfig.toLowerCase());
   }
 }
