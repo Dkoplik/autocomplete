@@ -158,11 +158,11 @@ public class AutocompleteProvider {
 
   /**
    * Получить кэшированные кандидаты, если они есть и подходят по размеру.
-   * 
+   *
    * @param key Ключ для поиска в кеше
-   * 
+   *
    * @param limit Максимальное количество кандидатов
-   * 
+   *
    * @return Список кандидатов
    */
   private List<Candidate> getCachedCandidates(String key, int limit) {
@@ -177,9 +177,9 @@ public class AutocompleteProvider {
 
   /**
    * Положить кандидатов в кэш.
-   * 
+   *
    * @param key Ключ для поиска в кеше
-   * 
+   *
    * @param candidates Список кандидатов
    */
   private void putCachedCandidates(String key, List<Candidate> candidates) {
@@ -190,11 +190,11 @@ public class AutocompleteProvider {
 
   /**
    * Получить кандидатов для точного совпадения префикса.
-   * 
+   *
    * @param prefix Префикс на основе которго происходит автодополнение
-   * 
+   *
    * @param limit Максимальное количество вариантов автодополнения
-   * 
+   *
    * @return Список вариантов автодополнения
    */
   private List<Candidate> getExactPrefixCandidates(String prefix, int limit) {
@@ -206,13 +206,13 @@ public class AutocompleteProvider {
 
   /**
    * Получить кандидатов с учётом опечаток (похожих префиксов).
-   * 
+   *
    * @param prefix Префикс на основе которго происходит автодополнение
-   * 
+   *
    * @param limit Максимальное количество вариантов автодополнения
-   * 
+   *
    * @param key Ключ для поиска в кеше
-   * 
+   *
    * @return Список вариантов автодополнения
    */
   private List<Candidate> getTypoToleranceCandidates(String prefix, int limit, String key) {
@@ -243,11 +243,11 @@ public class AutocompleteProvider {
 
   /**
    * Получить кэшированные похожие префиксы или вычислить и закэшировать их.
-   * 
+   *
    * @param key Ключ для поиска в кеше
-   * 
+   *
    * @param prefix Префикс на основе которго происходит автодополнение
-   * 
+   *
    * @return Список похожих префиксов
    */
   private List<String> getCachedSimilarPrefixes(String key, String prefix) {
@@ -269,9 +269,9 @@ public class AutocompleteProvider {
 
   /**
    * Добавить текст для обновления данных. Сбрасывает кеш.
-   * 
+   *
    * @param text Текст для обновления данных
-   * 
+   *
    * @throws IllegalArgumentException Если text равен null
    */
   public void addText(String text) {

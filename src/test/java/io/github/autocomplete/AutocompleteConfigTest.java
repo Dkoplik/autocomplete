@@ -1,9 +1,10 @@
 package io.github.autocomplete;
 
-import io.github.autocomplete.util.Levenshtein;
-import org.junit.jupiter.api.Test;
-import java.util.function.BiFunction;
 import static org.junit.jupiter.api.Assertions.*;
+
+import io.github.autocomplete.util.Levenshtein;
+import java.util.function.BiFunction;
+import org.junit.jupiter.api.Test;
 
 class AutocompleteConfigTest {
   @Test
@@ -14,8 +15,7 @@ class AutocompleteConfigTest {
     assertEquals(0, config.tolerance());
     assertEquals(0.5, config.similarWeight());
     assertEquals(1.0, config.originalWeight());
-    assertEquals(3, config.distanceFunction().apply("kitten", "sitting")); // Is Levenshtein
-                                                                           // distance?
+    assertEquals(3, config.distanceFunction().apply("kitten", "sitting"));
   }
 
   @Test

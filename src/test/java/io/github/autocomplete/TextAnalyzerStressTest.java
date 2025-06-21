@@ -2,6 +2,9 @@ package io.github.autocomplete;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import io.github.autocomplete.tokenizer.SimpleTokenizer;
+import io.github.autocomplete.tokenizer.TokenizerConfig;
+import io.github.autocomplete.util.WordFrequency;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -13,10 +16,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
-
-import io.github.autocomplete.tokenizer.SimpleTokenizer;
-import io.github.autocomplete.tokenizer.TokenizerConfig;
-import io.github.autocomplete.util.WordFrequency;
 
 /**
  * Стресс-тесты для TextAnalyzer

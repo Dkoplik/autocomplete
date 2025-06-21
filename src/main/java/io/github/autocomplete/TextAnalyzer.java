@@ -25,9 +25,9 @@ public class TextAnalyzer {
 
   /**
    * Создать анализатор текста с указанным токенизатором в качестве токенизатора по умолчанию.
-   * 
+   *
    * @param tokenizer Токенизатор для обработки текста
-   * 
+   *
    * @throws IllegalArgumentException Если tokenizer равен null
    */
   public TextAnalyzer(Tokenizer tokenizer) {
@@ -40,9 +40,9 @@ public class TextAnalyzer {
 
   /**
    * Обрабатывает текст и обновляет частоты слов, используя токенизатор по умолчанию.
-   * 
+   *
    * @param text Текст для обработки
-   * 
+   *
    * @throws IllegalArgumentException Если text равен null
    */
   public void addText(String text) {
@@ -51,13 +51,13 @@ public class TextAnalyzer {
 
   /**
    * Обрабатывает текст и обновляет частоты слов, используя указанный токенизатор.
-   * 
+   *
    * @param text Текст для обработки
-   * 
+   *
    * @param tokenizer Токенизатор для обработки текста
-   * 
+   *
    * @throws IllegalArgumentException Если text равен null
-   * 
+   *
    * @throws IllegalArgumentException Если tokenizer равен null
    */
   public void addText(String text, Tokenizer tokenizer) {
@@ -73,11 +73,11 @@ public class TextAnalyzer {
 
   /**
    * Получить частоту конкретного слова.
-   * 
+   *
    * @param word Слово, для которого нужно получить частоту
-   * 
+   *
    * @return Частота указанного слова
-   * 
+   *
    * @throws IllegalArgumentException Если word равен null или пустой строке
    */
   public int getWordFrequency(String word) {
@@ -90,11 +90,11 @@ public class TextAnalyzer {
 
   /**
    * Получить топ-N самых частых слов.
-   * 
+   *
    * @param n Количество слов
-   * 
+   *
    * @return Список из топ-N самых частых слов
-   * 
+   *
    * @throws IllegalArgumentException Если n меньше или равно 0
    */
   public List<WordFrequency> getTopWords(int n) {
@@ -107,7 +107,7 @@ public class TextAnalyzer {
 
   /**
    * Возвращает все слова с их частотами.
-   * 
+   *
    * @return Все слова с их частотами
    */
   public Map<String, Integer> getAllWords() {
@@ -116,7 +116,7 @@ public class TextAnalyzer {
 
   /**
    * Возвращает используемый по умолчанию токенизатор.
-   * 
+   *
    * @return Токенизатор
    */
   public Tokenizer getTokenizer() {
@@ -125,9 +125,9 @@ public class TextAnalyzer {
 
   /**
    * Удаляет слово из анализатора.
-   * 
+   *
    * @param word Удаляемое слово
-   * 
+   *
    * @throws IllegalArgumentException Если word равен null или пустой строке
    */
   public void removeWord(String word) {
@@ -140,11 +140,11 @@ public class TextAnalyzer {
 
   /**
    * Возвращает слова, соответствующие regex-шаблону.
-   * 
+   *
    * @param regex Regex для отбора слов
-   * 
+   *
    * @return Слова и их частоты, удовлетворяющие regex-шаблону
-   * 
+   *
    * @throws IllegalArgumentException Если regex равен null или пустой строке
    */
   public Map<String, Integer> getWordsByRegex(String regex) {
@@ -167,7 +167,7 @@ public class TextAnalyzer {
 
   /**
    * Возвращает префиксное дерево (для внутреннего использования).
-   * 
+   *
    * @return Префиксное дерево {@link Trie}
    */
   Trie getTrie() {
