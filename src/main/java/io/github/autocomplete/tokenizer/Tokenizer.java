@@ -1,7 +1,7 @@
 package io.github.autocomplete.tokenizer;
 
-import java.util.stream.Stream;
 import io.github.autocomplete.config.TokenizerConfig;
+import java.util.stream.Stream;
 
 /**
  * Интерфейс для токенизатора (разбение текста на слова)

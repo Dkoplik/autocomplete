@@ -1,9 +1,9 @@
 package io.github.autocomplete.util;
 
+import io.github.autocomplete.model.WordFrequency;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import io.github.autocomplete.model.WordFrequency;
 
 /**
  * Реализация кучи фиксированного размера для эффективного поиска top-N элементов

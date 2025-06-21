@@ -2,22 +2,21 @@ package io.github.autocomplete;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import io.github.autocomplete.config.AutocompleteConfig;
+import io.github.autocomplete.config.TokenizerConfig;
+import io.github.autocomplete.model.Candidate;
+import io.github.autocomplete.tokenizer.SimpleTokenizer;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import io.github.autocomplete.config.AutocompleteConfig;
-import io.github.autocomplete.config.TokenizerConfig;
-import io.github.autocomplete.model.Candidate;
-import io.github.autocomplete.tokenizer.SimpleTokenizer;
 
 /**
  * Стресс-тесты для AutocompleteProvider

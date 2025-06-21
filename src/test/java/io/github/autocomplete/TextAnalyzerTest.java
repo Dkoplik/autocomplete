@@ -1,12 +1,12 @@
 package io.github.autocomplete;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 import io.github.autocomplete.config.TokenizerConfig;
 import io.github.autocomplete.model.WordFrequency;
 import io.github.autocomplete.tokenizer.SimpleTokenizer;
 import java.util.List;
 import java.util.Map;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

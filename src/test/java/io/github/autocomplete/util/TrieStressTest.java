@@ -1,18 +1,18 @@
 package io.github.autocomplete.util;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import io.github.autocomplete.model.WordFrequency;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
-import io.github.autocomplete.model.WordFrequency;
 
 /**
  * Стресс-тесты для реализации префиксного дерева (Trie)
