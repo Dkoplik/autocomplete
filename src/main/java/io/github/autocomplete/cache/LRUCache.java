@@ -5,6 +5,10 @@ import java.util.Map;
 
 /**
  * Реализация LRU-кеша для использования в AutocompleteProvider
+ *
+ * @param <K> тип ключа
+ *
+ * @param <V> тип значения
  */
 public class LRUCache<K, V> {
   private static class Node<K, V> {

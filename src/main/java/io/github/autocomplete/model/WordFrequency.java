@@ -2,6 +2,10 @@ package io.github.autocomplete.model;
 
 /**
  * Record для хранения слова и его частоты (frequency).
+ *
+ * @param word слово
+ *
+ * @param frequency частота слова
  */
 public record WordFrequency(String word, int frequency) implements Comparable<WordFrequency> {
   /**
