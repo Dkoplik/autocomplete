@@ -145,7 +145,7 @@ class LRUCacheTest {
     assertNull(cache.get(2));
 
     cache.put(5, "E");
-    assertEquals("D", cache.get(4)); 
+    assertEquals("D", cache.get(4));
     assertEquals("A", cache.get(1));
     assertEquals("E", cache.get(5));
     assertNull(cache.get(3));

@@ -14,7 +14,8 @@ class AutocompleteConfigTest {
     assertEquals(0, config.tolerance());
     assertEquals(0.5, config.similarWeight());
     assertEquals(1.0, config.originalWeight());
-    assertEquals(3, config.distanceFunction().apply("kitten", "sitting")); // Is Levenshtein distance?
+    assertEquals(3, config.distanceFunction().apply("kitten", "sitting")); // Is Levenshtein
+                                                                           // distance?
   }
 
   @Test
@@ -30,19 +31,19 @@ class AutocompleteConfigTest {
 
   @Test
   void constructor_NullDistanceFunction_ThrowsException() {
-    assertThrows(IllegalArgumentException.class, () ->
-      new AutocompleteConfig(null, 1, 1, 0.5, 1.0));
+    assertThrows(IllegalArgumentException.class,
+        () -> new AutocompleteConfig(null, 1, 1, 0.5, 1.0));
   }
 
   @Test
   void constructor_NegativeToleranceThreshold_ThrowsException() {
-    assertThrows(IllegalArgumentException.class, () ->
-      new AutocompleteConfig(Levenshtein::distance, -1, 1, 0.5, 1.0));
+    assertThrows(IllegalArgumentException.class,
+        () -> new AutocompleteConfig(Levenshtein::distance, -1, 1, 0.5, 1.0));
   }
 
   @Test
   void constructor_NegativeTolerance_ThrowsException() {
-    assertThrows(IllegalArgumentException.class, () ->
-      new AutocompleteConfig(Levenshtein::distance, 1, -1, 0.5, 1.0));
+    assertThrows(IllegalArgumentException.class,
+        () -> new AutocompleteConfig(Levenshtein::distance, 1, -1, 0.5, 1.0));
   }
-} 
+}

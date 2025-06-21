@@ -195,21 +195,25 @@ class Trie {
   }
 
   /**
-   * Возвращает список префиксов в дереве, находящихся на расстоянии <= tolerance от заданного префикса.
-   * Для коротких префиксов (длина < threshold) возвращает только точные совпадения.
+   * Возвращает список префиксов в дереве, находящихся на расстоянии <= tolerance от заданного
+   * префикса. Для коротких префиксов (длина < threshold) возвращает только точные совпадения.
    */
-  public List<String> findSimilarPrefixes(String prefix, int tolerance, int threshold, BiFunction<String, String, Integer> distanceFunction) {
+  public List<String> findSimilarPrefixes(String prefix, int tolerance, int threshold,
+      BiFunction<String, String, Integer> distanceFunction) {
     List<String> result = new java.util.ArrayList<>();
     if (prefix.length() < threshold) {
       TrieNode node = getNode(prefix);
-      if (node != null) result.add(prefix);
+      if (node != null)
+        result.add(prefix);
       return result;
     }
     collectSimilarPrefixes(root, new StringBuilder(), prefix, tolerance, distanceFunction, result);
     return result;
   }
 
-  private void collectSimilarPrefixes(TrieNode node, StringBuilder current, String target, int tolerance, BiFunction<String, String, Integer> distanceFunction, java.util.List<String> result) {
+  private void collectSimilarPrefixes(TrieNode node, StringBuilder current, String target,
+      int tolerance, BiFunction<String, String, Integer> distanceFunction,
+      java.util.List<String> result) {
     if (current.length() > 0 && node.getFrequency() > 0) {
       String candidate = current.toString();
       if (distanceFunction.apply(target, candidate) <= tolerance) {
@@ -218,7 +222,8 @@ class Trie {
     }
     for (java.util.Map.Entry<Character, TrieNode> entry : node.getChildren().entrySet()) {
       current.append(entry.getKey());
-      collectSimilarPrefixes(entry.getValue(), current, target, tolerance, distanceFunction, result);
+      collectSimilarPrefixes(entry.getValue(), current, target, tolerance, distanceFunction,
+          result);
       current.deleteCharAt(current.length() - 1);
     }
   }

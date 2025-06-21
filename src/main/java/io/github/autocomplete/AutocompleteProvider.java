@@ -11,7 +11,7 @@ import io.github.autocomplete.util.Candidate;
 import io.github.autocomplete.util.WordFrequency;
 
 /**
- * Поставщик автодополнений с кешированием
+ * Поставщик автодополнений с кешированием.
  */
 public class AutocompleteProvider {
   private final TextAnalyzer textAnalyzer;
@@ -50,7 +50,7 @@ public class AutocompleteProvider {
   }
 
   /**
-   * Инициализация автодополнений на основе текстового анализатора
+   * Инициализация автодополнений на основе текстового анализатора.
    * 
    * @param textAnalyzer Текстовый анализатор на основе которого определяются автодополнения
    * @param config Конфигурация автодополнений
@@ -72,7 +72,7 @@ public class AutocompleteProvider {
   }
 
   /**
-   * Получить варианты автодополнения с учётом конфигурации (опечатки, веса и т.д.)
+   * Получить варианты автодополнения с учётом конфигурации (опечатки, веса и т.д.).
    *
    * @param prefix Префикс на основе которго происходит автодополнение
    * @param limit максимальное количество вариантов автодополнения
@@ -92,15 +92,15 @@ public class AutocompleteProvider {
     List<Candidate> cached = getCachedCandidates(key, limit);
     if (cached != null)
       return cached;
-    List<Candidate> candidates = (config.tolerance() <= 0)
-        ? getExactPrefixCandidates(lookupPrefix, limit)
-        : getTypoToleranceCandidates(lookupPrefix, limit, key);
+    List<Candidate> candidates =
+        (config.tolerance() <= 0) ? getExactPrefixCandidates(lookupPrefix, limit)
+            : getTypoToleranceCandidates(lookupPrefix, limit, key);
     putCachedCandidates(key, candidates);
     return candidates.size() > limit ? candidates.subList(0, limit) : candidates;
   }
 
   /**
-   * Получить кэшированные кандидаты, если они есть и подходят по размеру
+   * Получить кэшированные кандидаты, если они есть и подходят по размеру.
    */
   private List<Candidate> getCachedCandidates(String key, int limit) {
     if (cache != null) {
@@ -113,7 +113,7 @@ public class AutocompleteProvider {
   }
 
   /**
-   * Положить кандидатов в кэш
+   * Положить кандидатов в кэш.
    */
   private void putCachedCandidates(String key, List<Candidate> candidates) {
     if (cache != null) {
@@ -122,7 +122,7 @@ public class AutocompleteProvider {
   }
 
   /**
-   * Получить кандидатов для точного совпадения префикса
+   * Получить кандидатов для точного совпадения префикса.
    */
   private List<Candidate> getExactPrefixCandidates(String prefix, int limit) {
     List<WordFrequency> result = textAnalyzer.getTrie().findCompletions(prefix, limit);
@@ -132,7 +132,7 @@ public class AutocompleteProvider {
   }
 
   /**
-   * Получить кандидатов с учётом опечаток (похожих префиксов)
+   * Получить кандидатов с учётом опечаток (похожих префиксов).
    */
   private List<Candidate> getTypoToleranceCandidates(String prefix, int limit, String key) {
     List<String> similarPrefixes = getCachedSimilarPrefixes(key, prefix);
@@ -160,7 +160,7 @@ public class AutocompleteProvider {
   }
 
   /**
-   * Получить кэшированные похожие префиксы или вычислить и закэшировать их
+   * Получить кэшированные похожие префиксы или вычислить и закэшировать их.
    */
   private List<String> getCachedSimilarPrefixes(String key, String prefix) {
     if (similarPrefixCache != null) {

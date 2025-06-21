@@ -34,4 +34,4 @@ class LevenshteinTest {
   void distance_CaseSensitivity() {
     assertEquals(1, Levenshtein.distance("abc", "Abc"));
   }
-} 
+}

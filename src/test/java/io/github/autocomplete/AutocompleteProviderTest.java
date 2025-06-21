@@ -142,7 +142,8 @@ class AutocompleteProviderTest {
 
   @Test
   void getAutocomplete_TypoTolerance_SuggestsSimilar() {
-    AutocompleteConfig config = new AutocompleteConfig(io.github.autocomplete.util.Levenshtein::distance, 1, 1, 0.5, 1.0);
+    AutocompleteConfig config =
+        new AutocompleteConfig(io.github.autocomplete.util.Levenshtein::distance, 1, 1, 0.5, 1.0);
     provider = new AutocompleteProvider(textAnalyzer, config, 10);
     provider.addText("apple ample apply");
     List<Candidate> completions = provider.getAutocomplete("aple", 10);
@@ -153,7 +154,8 @@ class AutocompleteProviderTest {
 
   @Test
   void getAutocomplete_TypoTolerance_Threshold() {
-    AutocompleteConfig config = new AutocompleteConfig(io.github.autocomplete.util.Levenshtein::distance, 5, 1, 0.5, 1.0);
+    AutocompleteConfig config =
+        new AutocompleteConfig(io.github.autocomplete.util.Levenshtein::distance, 5, 1, 0.5, 1.0);
     provider = new AutocompleteProvider(textAnalyzer, config, 10);
     provider.addText("apple ample apply");
     List<Candidate> completions = provider.getAutocomplete("app", 10);
@@ -164,12 +166,15 @@ class AutocompleteProviderTest {
 
   @Test
   void getAutocomplete_TypoTolerance_Weights() {
-    AutocompleteConfig config = new AutocompleteConfig(io.github.autocomplete.util.Levenshtein::distance, 1, 1, 0.1, 1.0);
+    AutocompleteConfig config =
+        new AutocompleteConfig(io.github.autocomplete.util.Levenshtein::distance, 1, 1, 0.1, 1.0);
     provider = new AutocompleteProvider(textAnalyzer, config, 10);
     provider.addText("apple apple ample");
     List<Candidate> completions = provider.getAutocomplete("aple", 10);
-    Candidate apple = completions.stream().filter(c -> c.word().equals("apple")).findFirst().orElseThrow();
-    Candidate ample = completions.stream().filter(c -> c.word().equals("ample")).findFirst().orElseThrow();
+    Candidate apple =
+        completions.stream().filter(c -> c.word().equals("apple")).findFirst().orElseThrow();
+    Candidate ample =
+        completions.stream().filter(c -> c.word().equals("ample")).findFirst().orElseThrow();
     assertTrue(apple.weight() > ample.weight());
   }
 
@@ -193,7 +198,8 @@ class AutocompleteProviderTest {
 
   @Test
   void getAutocomplete_Cache_SimilarPrefixCache() {
-    AutocompleteConfig config = new AutocompleteConfig(io.github.autocomplete.util.Levenshtein::distance, 1, 1, 0.5, 1.0);
+    AutocompleteConfig config =
+        new AutocompleteConfig(io.github.autocomplete.util.Levenshtein::distance, 1, 1, 0.5, 1.0);
     provider = new AutocompleteProvider(textAnalyzer, config, 10);
     provider.addText("apple ample apply");
     // First call populates similarPrefixCache
