@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 class TokenizerConfigTest {
 
   @Test
-  void defaultConstructor_SetsExpectedValues() {
+  void defaultConstructorSetsExpectedValues() {
     TokenizerConfig config = new TokenizerConfig();
 
     assertEquals("\\s+", config.splitRegex());
@@ -20,7 +20,7 @@ class TokenizerConfigTest {
   }
 
   @Test
-  void parameterizedConstructor_SetsProvidedValues() {
+  void parameterizedConstructorSetsProvidedValues() {
     Predicate<Character> customFilter = c -> c == 'a';
     TokenizerConfig config = new TokenizerConfig(",", customFilter, false);
 

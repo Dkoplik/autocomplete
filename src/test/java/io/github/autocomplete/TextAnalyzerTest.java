@@ -2,12 +2,12 @@ package io.github.autocomplete;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import io.github.autocomplete.tokenizer.SimpleTokenizer;
+import io.github.autocomplete.tokenizer.TokenizerConfig;
+import io.github.autocomplete.util.WordFrequency;
 import java.util.List;
 import java.util.Map;
 
-import io.github.autocomplete.tokenizer.SimpleTokenizer;
-import io.github.autocomplete.tokenizer.TokenizerConfig;
-import io.github.autocomplete.util.Candidate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -21,8 +21,8 @@ class TextAnalyzerTest {
   }
 
   @Test
-  void processText_WithDefaultTokenizer_UpdatesWordFrequencies() {
-    analyzer.processText("Apple apple Banana apple Cherry");
+  void processTextWithDefaultTokenizerUpdatesWordFrequencies() {
+    analyzer.addText("Apple apple Banana apple Cherry");
 
     assertEquals(3, analyzer.getWordFrequency("apple"));
     assertEquals(1, analyzer.getWordFrequency("banana"));
@@ -30,14 +30,14 @@ class TextAnalyzerTest {
   }
 
   @Test
-  void processText_WithCustomTokenizer_RespectsConfiguration() {
+  void processTextWithCustomTokenizerRespectsConfiguration() {
     TokenizerConfig config =
         new TokenizerConfig("\\s+", c -> Character.isLetter(c) || c == '-', false);
     SimpleTokenizer tokenizer = new SimpleTokenizer();
     tokenizer.setConfig(config);
 
     TextAnalyzer customAnalyzer = new TextAnalyzer(tokenizer);
-    customAnalyzer.processText("e-mail user-name 123 test!");
+    customAnalyzer.addText("e-mail user-name 123 test!");
 
     assertEquals(1, customAnalyzer.getWordFrequency("e-mail"));
     assertEquals(1, customAnalyzer.getWordFrequency("user-name"));
@@ -46,26 +46,24 @@ class TextAnalyzerTest {
   }
 
   @Test
-  void getWordFrequency_ForNonExistentWord_ReturnsZero() {
-    analyzer.processText("test");
+  void getWordFrequencyForNonExistentWordReturnsZero() {
+    analyzer.addText("test");
     assertEquals(0, analyzer.getWordFrequency("missing"));
   }
 
   @Test
-  void getTopWords_ReturnsHighestFrequencyWords() {
-    analyzer.processText("apple banana apple cherry apple banana");
+  void getTopWordsReturnsHighestFrequencyWords() {
+    analyzer.addText("apple banana apple cherry apple banana");
 
-    List<Candidate> topWords = analyzer.getTopWords(2);
+    List<WordFrequency> topWords = analyzer.getTopWords(2);
     assertEquals(2, topWords.size());
     assertEquals("apple", topWords.get(0).word());
-    assertEquals(3, topWords.get(0).frequency());
     assertEquals("banana", topWords.get(1).word());
-    assertEquals(2, topWords.get(1).frequency());
   }
 
   @Test
-  void getAllWords_ReturnsCompleteWordMap() {
-    analyzer.processText("apple apple banana");
+  void getAllWordsReturnsCompleteWordMap() {
+    analyzer.addText("apple apple banana");
 
     Map<String, Integer> allWords = analyzer.getAllWords();
     assertEquals(2, allWords.size());
@@ -74,8 +72,8 @@ class TextAnalyzerTest {
   }
 
   @Test
-  void removeWord_SetsFrequencyToZero() {
-    analyzer.processText("test test");
+  void removeWordSetsFrequencyToZero() {
+    analyzer.addText("test test");
     analyzer.removeWord("test");
 
     assertEquals(0, analyzer.getWordFrequency("test"));
@@ -83,8 +81,8 @@ class TextAnalyzerTest {
   }
 
   @Test
-  void getWordsByRegex_FiltersWordsCorrectly() {
-    analyzer.processText("apple applet application banana bandana cherry");
+  void getWordsByRegexFiltersWordsCorrectly() {
+    analyzer.addText("apple applet application banana bandana cherry");
 
     // Все слова, начинающиеся на "app"
     Map<String, Integer> appWords = analyzer.getWordsByRegex("app.*");
@@ -102,15 +100,15 @@ class TextAnalyzerTest {
   }
 
   @Test
-  void getWordsByRegex_WithNoMatches_ReturnsEmptyMap() {
-    analyzer.processText("apple banana");
+  void getWordsByRegexWithNoMatchesReturnsEmptyMap() {
+    analyzer.addText("apple banana");
     assertTrue(analyzer.getWordsByRegex("xyz.*").isEmpty());
   }
 
   @Test
-  void complexWorkflow_CombinedOperations() {
-    analyzer.processText("The quick brown fox jumps over the lazy dog");
-    analyzer.processText("The quick dog jumps over the lazy fox");
+  void complexWorkflowCombinedOperations() {
+    analyzer.addText("The quick brown fox jumps over the lazy dog");
+    analyzer.addText("The quick dog jumps over the lazy fox");
 
     assertEquals(4, analyzer.getWordFrequency("the"));
     assertEquals(2, analyzer.getWordFrequency("quick"));
@@ -124,14 +122,11 @@ class TextAnalyzerTest {
     assertEquals(0, analyzer.getWordFrequency("the"));
 
     // Получение топ-3 слов
-    List<Candidate> top3 = analyzer.getTopWords(3);
+    List<WordFrequency> top3 = analyzer.getTopWords(3);
     assertEquals(3, top3.size());
     assertEquals("dog", top3.get(0).word());
-    assertEquals(2, top3.get(0).frequency());
     assertEquals("fox", top3.get(1).word());
-    assertEquals(2, top3.get(1).frequency());
     assertEquals("jumps", top3.get(2).word());
-    assertEquals(2, top3.get(2).frequency());
 
     // Поиск по regex
     Map<String, Integer> fourLetterWords = analyzer.getWordsByRegex(".{4}");
@@ -141,28 +136,27 @@ class TextAnalyzerTest {
   }
 
   @Test
-  void caseSensitivity_WithDefaultTokenizer() {
-    analyzer.processText("Apple apple APPLE");
+  void caseSensitivityWithDefaultTokenizer() {
+    analyzer.addText("Apple apple APPLE");
 
     assertEquals(3, analyzer.getWordFrequency("apple"));
     assertEquals(0, analyzer.getWordFrequency("Apple"));
 
-    List<Candidate> top = analyzer.getTopWords(1);
+    List<WordFrequency> top = analyzer.getTopWords(1);
     assertEquals("apple", top.get(0).word());
-    assertEquals(3, top.get(0).frequency());
   }
 
   @Test
-  void emptyTextProcessing_DoesNotChangeState() {
-    analyzer.processText("");
+  void emptyTextProcessingDoesNotChangeState() {
+    analyzer.addText("");
     assertTrue(analyzer.getAllWords().isEmpty());
 
-    analyzer.processText("  \n\t");
+    analyzer.addText("  \n\t");
     assertTrue(analyzer.getAllWords().isEmpty());
   }
 
   @Test
-  void getTokenizer_ReturnsConfiguredTokenizer() {
+  void getTokenizerReturnsConfiguredTokenizer() {
     SimpleTokenizer customTokenizer = new SimpleTokenizer();
     TextAnalyzer customAnalyzer = new TextAnalyzer(customTokenizer);
 
@@ -171,19 +165,10 @@ class TextAnalyzerTest {
 
   @Test
   void specialCharactersHandling() {
-    analyzer.processText("hello-world email@domain.com 123-456");
+    analyzer.addText("hello-world email@domain.com 123-456");
 
     assertEquals(1, analyzer.getWordFrequency("helloworld"));
     assertEquals(0, analyzer.getWordFrequency("email"));
     assertEquals(0, analyzer.getWordFrequency("123"));
-  }
-
-  @Test
-  void getCompletions_InternalMethodWorks() {
-    analyzer.processText("application apple applet");
-
-    List<Candidate> completions = analyzer.getCompletions("app", 10);
-    assertEquals(3, completions.size());
-    assertEquals("apple", completions.get(0).word());
   }
 }

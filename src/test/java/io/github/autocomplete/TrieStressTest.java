@@ -2,6 +2,7 @@ package io.github.autocomplete;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import io.github.autocomplete.util.WordFrequency;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -13,7 +14,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
-import io.github.autocomplete.util.Candidate;
 
 /**
  * Стресс-тесты для реализации префиксного дерева (Trie)
@@ -56,7 +56,7 @@ class TrieStressTest {
 
   @Test
   @Timeout(value = 20, unit = TimeUnit.SECONDS)
-  void insertLargeDataset_Performance() {
+  void insertLargeDatasetPerformance() {
     long startTime = System.nanoTime();
 
     for (int i = 0; i < LARGE_DATA_SIZE; i++) {
@@ -75,7 +75,7 @@ class TrieStressTest {
 
   @Test
   @Timeout(value = 40, unit = TimeUnit.SECONDS)
-  void insertVeryLargeDataset_Performance() {
+  void insertVeryLargeDatasetPerformance() {
     long startTime = System.nanoTime();
 
     for (int i = 0; i < VERY_LARGE_DATA_SIZE; i++) {
@@ -93,7 +93,7 @@ class TrieStressTest {
 
   @Test
   @Timeout(value = 40, unit = TimeUnit.SECONDS)
-  void findCompletions_Performance() {
+  void findCompletionsPerformance() {
     for (int i = 0; i < LARGE_DATA_SIZE; i++) {
       String word = dictionary.get(random.nextInt(UNIQUE_WORDS));
       trie.insert(word);
@@ -106,7 +106,7 @@ class TrieStressTest {
       String prefix = prefixes.get(random.nextInt(prefixes.size()));
 
       long startTime = System.nanoTime();
-      List<Candidate> completions = trie.findCompletions(prefix, COMPLETION_LIMIT);
+      List<WordFrequency> completions = trie.findCompletions(prefix, COMPLETION_LIMIT);
       totalDuration += System.nanoTime() - startTime;
 
       assertNotNull(completions);
@@ -120,14 +120,14 @@ class TrieStressTest {
 
   @Test
   @Timeout(value = 20, unit = TimeUnit.SECONDS)
-  void getTopFrequentWords_Performance() {
+  void getTopFrequentWordsPerformance() {
     for (int i = 0; i < LARGE_DATA_SIZE; i++) {
       String word = dictionary.get(random.nextInt(UNIQUE_WORDS));
       trie.insert(word);
     }
 
     long startTime = System.nanoTime();
-    List<Candidate> topWords = trie.getTopFrequentWords(TOP_WORDS_LIMIT);
+    List<WordFrequency> topWords = trie.getTopFrequentWords(TOP_WORDS_LIMIT);
     long duration = System.nanoTime() - startTime;
 
     System.out.printf("getTopFrequentWords(%,d) took: %d ms%n", TOP_WORDS_LIMIT,
@@ -139,7 +139,7 @@ class TrieStressTest {
 
   @Test
   @Timeout(value = 20, unit = TimeUnit.SECONDS)
-  void getAllWords_Performance() {
+  void getAllWordsPerformance() {
     for (int i = 0; i < LARGE_DATA_SIZE; i++) {
       String word = dictionary.get(random.nextInt(UNIQUE_WORDS));
       trie.insert(word);
@@ -158,7 +158,7 @@ class TrieStressTest {
 
   @Test
   @Timeout(value = 1, unit = TimeUnit.MINUTES)
-  void mixedOperations_Performance() {
+  void mixedOperationsPerformance() {
     int operationsCount = LARGE_DATA_SIZE;
     double insertChance = 0.7;
     double findCompletionsChance = 0.2999;
@@ -208,7 +208,7 @@ class TrieStressTest {
 
   @Test
   @Timeout(value = 20, unit = TimeUnit.SECONDS)
-  void removeWords_Performance() {
+  void removeWordsPerformance() {
     for (int i = 0; i < LARGE_DATA_SIZE; i++) {
       String word = dictionary.get(random.nextInt(UNIQUE_WORDS));
       trie.insert(word);
@@ -232,10 +232,10 @@ class TrieStressTest {
     }
   }
 
-  private void assertSortedByFrequency(List<Candidate> candidates) {
+  private void assertSortedByFrequency(List<WordFrequency> candidates) {
     for (int i = 0; i < candidates.size() - 1; i++) {
-      Candidate current = candidates.get(i);
-      Candidate next = candidates.get(i + 1);
+      WordFrequency current = candidates.get(i);
+      WordFrequency next = candidates.get(i + 1);
 
       assertTrue(current.frequency() >= next.frequency(),
           "Candidates not sorted by frequency: " + current + " before " + next);

@@ -28,8 +28,14 @@ public class LRUCache<K, V> {
    * Создает LRU-кеш указанного размера
    * 
    * @param capacity размер кеша
+   * 
+   * @throws IllegalArgumentException Если capacity меньше 0
    */
   public LRUCache(int capacity) {
+    if (capacity < 0) {
+      throw new IllegalArgumentException("capacity cannot be less than 0");
+    }
+
     this.capacity = capacity;
     this.map = new HashMap<>(capacity * 2);
   }
@@ -38,8 +44,16 @@ public class LRUCache<K, V> {
    * Получить значение из кеша по ключу
    * 
    * @param key ключ элемента
+   * 
+   * @return значение элемента
+   * 
+   * @throws IllegalArgumentException Если key равен null
    */
   public V get(K key) {
+    if (key == null) {
+      throw new IllegalArgumentException("key cannot be null");
+    }
+
     Node<K, V> node = map.get(key);
     if (node == null)
       return null;
@@ -53,9 +67,16 @@ public class LRUCache<K, V> {
    * элемент
    * 
    * @param key ключ для кешируемого значения
+   * 
    * @param value кешируемое значение
+   * 
+   * @throws IllegalArgumentException Если key равен null
    */
   public void put(K key, V value) {
+    if (key == null) {
+      throw new IllegalArgumentException("key cannot be null");
+    }
+
     Node<K, V> node = map.get(key);
     if (node != null) {
       node.value = value;

@@ -80,12 +80,12 @@ class AutocompleteProviderStressTest {
 
   @Test
   @Timeout(value = 10, unit = TimeUnit.SECONDS)
-  void processLargeText_Performance() {
+  void processLargeTextPerformance() {
     String largeText = generateLargeText(LARGE_DATA_SIZE);
     provider = new AutocompleteProvider(textAnalyzer);
 
     long startTime = System.nanoTime();
-    provider.processText(largeText);
+    provider.addText(largeText);
     long duration = System.nanoTime() - startTime;
 
     System.out.printf("Processing %,d words took: %d ms%n", LARGE_DATA_SIZE,
@@ -94,12 +94,12 @@ class AutocompleteProviderStressTest {
 
   @Test
   @Timeout(value = 30, unit = TimeUnit.SECONDS)
-  void processVeryLargeText_Performance() {
+  void processVeryLargeTextPerformance() {
     String veryLargeText = generateLargeText(VERY_LARGE_DATA_SIZE);
     provider = new AutocompleteProvider(textAnalyzer);
 
     long startTime = System.nanoTime();
-    provider.processText(veryLargeText);
+    provider.addText(veryLargeText);
     long duration = System.nanoTime() - startTime;
 
     System.out.printf("Processing %,d words took: %d ms%n", VERY_LARGE_DATA_SIZE,
@@ -108,11 +108,11 @@ class AutocompleteProviderStressTest {
 
   @Test
   @Timeout(value = 10, unit = TimeUnit.SECONDS)
-  void getAutocomplete_WithoutCache_Performance() {
+  void getAutocompleteWithoutCachePerformance() {
     String largeText = generateLargeText(LARGE_DATA_SIZE);
     provider = new AutocompleteProvider(textAnalyzer, 0); // Без кеша
 
-    provider.processText(largeText);
+    provider.addText(largeText);
 
     long totalDuration = 0;
 
@@ -134,11 +134,11 @@ class AutocompleteProviderStressTest {
 
   @Test
   @Timeout(value = 10, unit = TimeUnit.SECONDS)
-  void getAutocomplete_WithCache_Performance() {
+  void getAutocompleteWithCachePerformance() {
     String largeText = generateLargeText(LARGE_DATA_SIZE);
     provider = new AutocompleteProvider(textAnalyzer, 100); // С кешем
 
-    provider.processText(largeText);
+    provider.addText(largeText);
 
     long firstPassDuration = 0;
     for (int i = 0; i < QUERY_COUNT; i++) {
@@ -167,7 +167,7 @@ class AutocompleteProviderStressTest {
 
   @Test
   @Timeout(value = 10, unit = TimeUnit.SECONDS)
-  void mixedWorkload_Performance() {
+  void mixedWorkloadPerformance() {
     provider = new AutocompleteProvider(textAnalyzer, 100); // С кешем
 
     int chunks = 10;
@@ -180,7 +180,7 @@ class AutocompleteProviderStressTest {
     for (int i = 0; i < chunks; i++) {
       String chunk = generateLargeText(chunkSize);
       long processStart = System.nanoTime();
-      provider.processText(chunk);
+      provider.addText(chunk);
       totalProcessTime += System.nanoTime() - processStart;
 
       for (int j = 0; j < queriesPerChunk; j++) {
@@ -203,10 +203,10 @@ class AutocompleteProviderStressTest {
   @ParameterizedTest
   @ValueSource(ints = {0, 10, 100, 1000})
   @Timeout(value = 10, unit = TimeUnit.SECONDS)
-  void cacheSizeImpact_Performance(int cacheSize) {
+  void cacheSizeImpactPerformance(int cacheSize) {
     String largeText = generateLargeText(LARGE_DATA_SIZE);
     provider = new AutocompleteProvider(textAnalyzer, cacheSize);
-    provider.processText(largeText);
+    provider.addText(largeText);
 
     for (int i = 0; i < QUERY_COUNT; i++) {
       String prefix = popularPrefixes.get(random.nextInt(popularPrefixes.size()));
@@ -229,10 +229,10 @@ class AutocompleteProviderStressTest {
 
   @Test
   @Timeout(value = 10, unit = TimeUnit.SECONDS)
-  void cacheEfficiency_WithRepeatedQueries() {
+  void cacheEfficiencyWithRepeatedQueries() {
     String largeText = generateLargeText(LARGE_DATA_SIZE);
     provider = new AutocompleteProvider(textAnalyzer, 100);
-    provider.processText(largeText);
+    provider.addText(largeText);
 
     List<String> repeatedPrefixes = popularPrefixes.subList(0, 10);
 
@@ -259,5 +259,43 @@ class AutocompleteProviderStressTest {
     System.out.printf("  First pass: %d ms%n", TimeUnit.NANOSECONDS.toMillis(firstPassDuration));
     System.out.printf("  Second pass: %d ms%n", TimeUnit.NANOSECONDS.toMillis(secondPassDuration));
     System.out.printf("  Speedup: %.2fx%n", (double) firstPassDuration / secondPassDuration);
+  }
+
+  @Test
+  @Timeout(value = 10, unit = TimeUnit.SECONDS)
+  void getAutocompleteTypoTolerancePerformance() {
+    String largeText = generateLargeText(LARGE_DATA_SIZE);
+    AutocompleteConfig config =
+        new AutocompleteConfig(io.github.autocomplete.util.Levenshtein::distance, 3, 1, 0.5, 1.0);
+    provider = new AutocompleteProvider(textAnalyzer, config, 100);
+    provider.addText(largeText);
+    long totalDuration = 0;
+    for (int i = 0; i < QUERY_COUNT; i++) {
+      String prefix = popularPrefixes.get(random.nextInt(popularPrefixes.size()));
+      String typoPrefix = prefix.substring(0, prefix.length() - 1) + "x";
+      long startTime = System.nanoTime();
+      List<Candidate> results = provider.getAutocomplete(typoPrefix, TOP_RESULTS_LIMIT);
+      totalDuration += System.nanoTime() - startTime;
+      assertNotNull(results);
+      assertTrue(results.size() <= TOP_RESULTS_LIMIT);
+    }
+    System.out.printf("Typo-tolerant %,d queries took: %d ms (avg: %.2f ms/query)%n", QUERY_COUNT,
+        TimeUnit.NANOSECONDS.toMillis(totalDuration),
+        (double) TimeUnit.NANOSECONDS.toMillis(totalDuration) / QUERY_COUNT);
+  }
+
+  @Test
+  @Timeout(value = 10, unit = TimeUnit.SECONDS)
+  void getAutocompleteTypoToleranceCacheStress() {
+    String largeText = generateLargeText(LARGE_DATA_SIZE);
+    AutocompleteConfig config =
+        new AutocompleteConfig(io.github.autocomplete.util.Levenshtein::distance, 3, 1, 0.5, 1.0);
+    provider = new AutocompleteProvider(textAnalyzer, config, 100);
+    provider.addText(largeText);
+    for (int i = 0; i < QUERY_COUNT; i++) {
+      String prefix = popularPrefixes.get(random.nextInt(popularPrefixes.size()));
+      String typoPrefix = prefix.substring(0, prefix.length() - 1) + "x";
+      provider.getAutocomplete(typoPrefix, TOP_RESULTS_LIMIT);
+    }
   }
 }

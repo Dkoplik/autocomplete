@@ -4,30 +4,56 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Узел префиксного дерева
+ * Узел префиксного дерева.
  */
 class TrieNode {
-    private final Map<Character, TrieNode> children;
-    private int frequency;
+  private final Map<Character, TrieNode> children;
+  private int frequency;
 
-    public TrieNode() {
-        this.children = new HashMap<>();
-        this.frequency = 0;
-    }
+  /**
+   * Создаёт новый узел.
+   */
+  public TrieNode() {
+    this.children = new HashMap<>();
+    this.frequency = 0;
+  }
 
-    public Map<Character, TrieNode> getChildren() {
-        return children;
-    }
+  /**
+   * Возвращает дочерние узлы.
+   *
+   * @return Дочерние узлы
+   */
+  public Map<Character, TrieNode> getChildren() {
+    return children;
+  }
 
-    public int getFrequency() {
-        return frequency;
-    }
+  /**
+   * Возвращает частоту узла.
+   *
+   * @return Частота узла
+   */
+  public int getFrequency() {
+    return frequency;
+  }
 
-    public void setFrequency(int frequency) {
-        this.frequency = frequency;
+  /**
+   * Устанавливает частоту узла.
+   *
+   * @param frequency Частота узла
+   *
+   * @throws IllegalArgumentException Если frequency меньше 0
+   */
+  public void setFrequency(int frequency) {
+    if (frequency < 0) {
+      throw new IllegalArgumentException("frequency cannot be negative");
     }
+    this.frequency = frequency;
+  }
 
-    public void incrementFrequency() {
-        this.frequency++;
-    }
+  /**
+   * Увеличивает частоту узла на 1.
+   */
+  public void incrementFrequency() {
+    this.frequency++;
+  }
 }

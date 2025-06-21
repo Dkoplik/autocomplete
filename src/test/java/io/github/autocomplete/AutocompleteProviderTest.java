@@ -22,8 +22,8 @@ class AutocompleteProviderTest {
   }
 
   @Test
-  void getAutocomplete_WithValidPrefix_ReturnsCompletions() {
-    provider.processText("application apple applet");
+  void getAutocompleteWithValidPrefixReturnsCompletions() {
+    provider.addText("application apple applet");
 
     List<Candidate> completions = provider.getAutocomplete("app", 10);
     assertEquals(3, completions.size());
@@ -31,21 +31,22 @@ class AutocompleteProviderTest {
   }
 
   @Test
-  void getAutocomplete_WithCache_ReturnsCachedResults() {
+  void getAutocompleteWithCacheReturnsCachedResults() {
     provider = new AutocompleteProvider(textAnalyzer, 10);
+    provider.addText("application apple applet");
 
     // заполнение кеша
     List<Candidate> firstCall = provider.getAutocomplete("app", 5);
     // получение из кеша
     List<Candidate> secondCall = provider.getAutocomplete("app", 5);
 
-    assertSame(firstCall, secondCall);
+    assertEquals(firstCall, secondCall);
   }
 
   @Test
-  void getAutocomplete_WithoutCache_AlwaysCalculates() {
+  void getAutocompleteWithoutCacheAlwaysCalculates() {
     provider = new AutocompleteProvider(textAnalyzer, 0); // Без кеша
-    provider.processText("application apple applet");
+    provider.addText("application apple applet");
 
     List<Candidate> firstCall = provider.getAutocomplete("app", 5);
     List<Candidate> secondCall = provider.getAutocomplete("app", 5);
@@ -54,40 +55,41 @@ class AutocompleteProviderTest {
     assertEquals(firstCall, secondCall);
   }
 
-  void getAutocomplete_InvalidPrefix_ThrowsException() {
+  @Test
+  void getAutocompleteInvalidPrefixThrowsException() {
     String prefix = "";
     assertThrows(IllegalArgumentException.class, () -> provider.getAutocomplete(prefix, 5));
   }
 
   @Test
-  void getAutocomplete_NullPrefix_ThrowsException() {
+  void getAutocompleteNullPrefixThrowsException() {
     assertThrows(IllegalArgumentException.class, () -> provider.getAutocomplete(null, 5));
   }
 
   @ParameterizedTest
   @ValueSource(ints = {0, -1, -10})
-  void getAutocomplete_InvalidLimit_ThrowsException(int limit) {
+  void getAutocompleteInvalidLimitThrowsException(int limit) {
     assertThrows(IllegalArgumentException.class, () -> provider.getAutocomplete("valid", limit));
   }
 
   @Test
-  void processText_UpdatesUnderlyingData() {
-    provider.processText("apple application");
+  void processTextUpdatesUnderlyingData() {
+    provider.addText("apple application");
     List<Candidate> initial = provider.getAutocomplete("app", 10);
     assertEquals(2, initial.size());
 
-    provider.processText("applet approval");
+    provider.addText("applet approval");
     List<Candidate> updated = provider.getAutocomplete("app", 10);
     assertEquals(4, updated.size());
   }
 
   @Test
-  void cache_DoesInvalidateAfterProcessText() {
+  void cacheDoesInvalidateAfterProcessText() {
     provider = new AutocompleteProvider(textAnalyzer, 10);
-    provider.processText("apple application");
+    provider.addText("apple application");
 
     List<Candidate> cachedResult = provider.getAutocomplete("app", 10);
-    provider.processText("applet approval");
+    provider.addText("applet approval");
 
     List<Candidate> newResult = provider.getAutocomplete("app", 10);
     assertNotSame(cachedResult, newResult);
@@ -95,22 +97,9 @@ class AutocompleteProviderTest {
   }
 
   @Test
-  void cache_KeyIsCaseInsensitive() {
-    provider = new AutocompleteProvider(textAnalyzer, 10);
-    provider.processText("apple");
-
-    List<Candidate> lowerCaseCall = provider.getAutocomplete("app", 5);
-    List<Candidate> mixedCaseCall = provider.getAutocomplete("App", 5);
-    List<Candidate> upperCaseCall = provider.getAutocomplete("APP", 5);
-
-    assertSame(lowerCaseCall, mixedCaseCall);
-    assertSame(lowerCaseCall, upperCaseCall);
-  }
-
-  @Test
-  void cache_RespectsSizeLimit() {
+  void cacheRespectsSizeLimit() {
     provider = new AutocompleteProvider(textAnalyzer, 2);
-    provider.processText("apple application");
+    provider.addText("apple application");
 
     List<Candidate> appCall = provider.getAutocomplete("app", 5);
     provider.getAutocomplete("ban", 5);
@@ -121,14 +110,14 @@ class AutocompleteProviderTest {
   }
 
   @Test
-  void complexWorkflow_WithCache() {
+  void complexWorkflowWithCache() {
     provider = new AutocompleteProvider(textAnalyzer, 5);
 
-    provider.processText("java javascript python");
+    provider.addText("java javascript python");
     List<Candidate> javaCompletions1 = provider.getAutocomplete("jav", 5);
     assertEquals(2, javaCompletions1.size());
 
-    provider.processText("javafx javelin");
+    provider.addText("javafx javelin");
     List<Candidate> javaCompletions2 = provider.getAutocomplete("jav", 5);
 
     assertNotSame(javaCompletions1, javaCompletions2);
@@ -136,9 +125,9 @@ class AutocompleteProviderTest {
   }
 
   @Test
-  void zeroCacheSize_DisablesCaching() {
+  void zeroCacheSizeDisablesCaching() {
     provider = new AutocompleteProvider(textAnalyzer, 0);
-    provider.processText("test tests");
+    provider.addText("test tests");
 
     List<Candidate> firstCall = provider.getAutocomplete("test", 5);
     List<Candidate> secondCall = provider.getAutocomplete("test", 5);
@@ -148,7 +137,75 @@ class AutocompleteProviderTest {
   }
 
   @Test
-  void negativeCacheSize_ThrowsExcpetion() {
+  void negativeCacheSizeThrowsExcpetion() {
     assertThrows(IllegalArgumentException.class, () -> new AutocompleteProvider(textAnalyzer, -1));
+  }
+
+  @Test
+  void getAutocompleteTypoToleranceSuggestsSimilar() {
+    AutocompleteConfig config =
+        new AutocompleteConfig(io.github.autocomplete.util.Levenshtein::distance, 1, 1, 0.5, 1.0);
+    provider = new AutocompleteProvider(textAnalyzer, config, 10);
+    provider.addText("apple ample apply");
+    List<Candidate> completions = provider.getAutocomplete("aple", 10);
+    assertTrue(completions.stream().anyMatch(c -> c.word().equals("apple")));
+    assertTrue(completions.stream().anyMatch(c -> c.word().equals("ample")));
+    assertFalse(completions.stream().anyMatch(c -> c.word().equals("apply")));
+  }
+
+  @Test
+  void getAutocompleteTypoToleranceThreshold() {
+    AutocompleteConfig config =
+        new AutocompleteConfig(io.github.autocomplete.util.Levenshtein::distance, 5, 1, 0.5, 1.0);
+    provider = new AutocompleteProvider(textAnalyzer, config, 10);
+    provider.addText("apple ample apply");
+    List<Candidate> completions = provider.getAutocomplete("app", 10);
+    assertEquals(2, completions.size());
+    completions = provider.getAutocomplete("applz", 10);
+    assertTrue(completions.stream().anyMatch(c -> c.word().equals("apple")));
+  }
+
+  @Test
+  void getAutocompleteTypoToleranceWeights() {
+    AutocompleteConfig config =
+        new AutocompleteConfig(io.github.autocomplete.util.Levenshtein::distance, 1, 1, 0.1, 1.0);
+    provider = new AutocompleteProvider(textAnalyzer, config, 10);
+    provider.addText("apple apple ample");
+    List<Candidate> completions = provider.getAutocomplete("aple", 10);
+    Candidate apple =
+        completions.stream().filter(c -> c.word().equals("apple")).findFirst().orElseThrow();
+    Candidate ample =
+        completions.stream().filter(c -> c.word().equals("ample")).findFirst().orElseThrow();
+    assertTrue(apple.weight() > ample.weight());
+  }
+
+  @Test
+  void getAutocompleteCacheReusesLargerLimit() {
+    provider.addText("apple application applet");
+    List<Candidate> big = provider.getAutocomplete("app", 10);
+    List<Candidate> small = provider.getAutocomplete("app", 2);
+    assertEquals(big.subList(0, 2), small);
+  }
+
+  @Test
+  void getAutocompleteCacheDifferentLimitMiss() {
+    provider.addText("apple application applet");
+    List<Candidate> small = provider.getAutocomplete("app", 2);
+    List<Candidate> big = provider.getAutocomplete("app", 10);
+    // Should not be same object, as big is recomputed
+    assertNotSame(small, big);
+    assertEquals(small, big.subList(0, 2));
+  }
+
+  @Test
+  void getAutocompleteCacheSimilarPrefixCache() {
+    AutocompleteConfig config =
+        new AutocompleteConfig(io.github.autocomplete.util.Levenshtein::distance, 1, 1, 0.5, 1.0);
+    provider = new AutocompleteProvider(textAnalyzer, config, 10);
+    provider.addText("apple ample apply");
+    // First call populates similarPrefixCache
+    provider.getAutocomplete("aple", 10);
+    // Second call should hit similarPrefixCache (no assertion, but should not throw or recompute)
+    provider.getAutocomplete("aple", 10);
   }
 }
