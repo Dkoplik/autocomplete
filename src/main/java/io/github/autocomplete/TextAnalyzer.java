@@ -4,6 +4,8 @@ import io.github.autocomplete.model.WordFrequency;
 import io.github.autocomplete.tokenizer.SimpleTokenizer;
 import io.github.autocomplete.tokenizer.Tokenizer;
 import io.github.autocomplete.util.Trie;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -173,5 +175,37 @@ public class TextAnalyzer {
    */
   Trie getTrie() {
     return trie;
+  }
+
+  /**
+   * Сохраняет данные анализатора в файл.
+   *
+   * @param file Файл для сохранения
+   * 
+   * @throws IOException Если произошла ошибка при записи файла
+   * 
+   * @throws IllegalArgumentException Если file равен null
+   */
+  public void saveToFile(File file) throws IOException {
+    if (file == null) {
+      throw new IllegalArgumentException("file cannot be null");
+    }
+    trie.saveToFile(file);
+  }
+
+  /**
+   * Загружает данные анализатора из файла.
+   *
+   * @param file Файл для загрузки
+   * 
+   * @throws IOException Если произошла ошибка при чтении файла
+   * 
+   * @throws IllegalArgumentException Если file равен null или файл имеет неправильный формат
+   */
+  public void loadFromFile(File file) throws IOException {
+    if (file == null) {
+      throw new IllegalArgumentException("file cannot be null");
+    }
+    trie.loadFromFile(file);
   }
 }

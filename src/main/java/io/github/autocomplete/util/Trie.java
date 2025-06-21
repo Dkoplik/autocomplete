@@ -1,6 +1,14 @@
 package io.github.autocomplete.util;
 
 import io.github.autocomplete.model.WordFrequency;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +19,9 @@ import java.util.function.BiFunction;
  * Реализация префиксного дерева с подсчётом частоты слов.
  */
 public class Trie {
+  public final int MAGIC_NUMBER = 0x54524945; // "TRIE" в hex
+  public final int VERSION = 1;
+
   private final TrieNode root;
 
   /**
@@ -18,6 +29,20 @@ public class Trie {
    */
   public Trie() {
     this.root = new TrieNode();
+  }
+
+  /**
+   * Создаёт дерево из файла.
+   *
+   * @param file Файл для загрузки
+   * 
+   * @throws IOException Если произошла ошибка при чтении файла
+   * 
+   * @throws IllegalArgumentException Если файл имеет неправильный формат
+   */
+  public Trie(File file) throws IOException {
+    this.root = new TrieNode();
+    loadFromFile(file);
   }
 
   /**
@@ -303,6 +328,92 @@ public class Trie {
       collectSimilarPrefixes(entry.getValue(), current, target, tolerance, distanceFunction,
           result);
       current.deleteCharAt(current.length() - 1);
+    }
+  }
+
+  /**
+   * Сохраняет дерево в файл.
+   *
+   * @param file Файл для сохранения
+   * 
+   * @throws IOException Если произошла ошибка при записи файла
+   * 
+   * @throws IllegalArgumentException Если file равен null
+   */
+  public void saveToFile(File file) throws IOException {
+    if (file == null) {
+      throw new IllegalArgumentException("file cannot be null");
+    }
+
+    try (DataOutputStream out =
+        new DataOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
+      out.writeInt(MAGIC_NUMBER);
+      out.writeInt(VERSION);
+      saveNode(root, out);
+    }
+  }
+
+  /**
+   * Загружает дерево из файла.
+   *
+   * @param file Файл для загрузки
+   * 
+   * @throws IOException Если произошла ошибка при чтении файла
+   * 
+   * @throws IllegalArgumentException Если file равен null или файл имеет неправильный формат
+   */
+  public void loadFromFile(File file) throws IOException {
+    if (file == null) {
+      throw new IllegalArgumentException("file cannot be null");
+    }
+    if (!file.exists()) {
+      throw new IllegalArgumentException("file does not exist: " + file.getPath());
+    }
+
+    try (DataInputStream in =
+        new DataInputStream(new BufferedInputStream(new FileInputStream(file)))) {
+      int magic = in.readInt();
+      if (magic != MAGIC_NUMBER) {
+        throw new IllegalArgumentException("Invalid file format: not a valid Trie file");
+      }
+
+      int version = in.readInt();
+      if (version != VERSION) {
+        throw new IllegalArgumentException("Unsupported file format version: " + version);
+      }
+
+      clear();
+      loadNode(root, in);
+    }
+  }
+
+  /**
+   * Рекурсивно сохраняет узел и его дочерние элементы.
+   */
+  private void saveNode(TrieNode node, DataOutputStream out) throws IOException {
+    out.writeInt(node.getFrequency());
+
+    Map<Character, TrieNode> children = node.getChildren();
+    out.writeInt(children.size());
+    for (Map.Entry<Character, TrieNode> entry : children.entrySet()) {
+      out.writeChar(entry.getKey());
+      saveNode(entry.getValue(), out);
+    }
+  }
+
+  /**
+   * Рекурсивно загружает узел и его дочерние элементы.
+   */
+  private void loadNode(TrieNode node, DataInputStream in) throws IOException {
+    int frequency = in.readInt();
+    node.setFrequency(frequency);
+
+    int childrenCount = in.readInt();
+    for (int i = 0; i < childrenCount; i++) {
+      char key = in.readChar();
+      TrieNode child = new TrieNode();
+      node.getChildren().put(key, child);
+      loadNode(child, in);
     }
   }
 }

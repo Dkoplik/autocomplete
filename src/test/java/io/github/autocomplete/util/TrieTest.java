@@ -3,6 +3,10 @@ package io.github.autocomplete.util;
 import static org.junit.jupiter.api.Assertions.*;
 
 import io.github.autocomplete.model.WordFrequency;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
@@ -271,16 +275,203 @@ class TrieTest {
 
   @Test
   void caseSensitiveBehavior() {
-    trie.insert("Apple");
-    trie.insert("apple");
-    trie.insert("APPLE");
+    trie.insert("Hello");
+    trie.insert("hello");
+    trie.insert("HELLO");
 
-    assertEquals(1, trie.getFrequency("Apple"));
-    assertEquals(1, trie.getFrequency("apple"));
-    assertEquals(1, trie.getFrequency("APPLE"));
+    assertEquals(1, trie.getFrequency("Hello"));
+    assertEquals(1, trie.getFrequency("hello"));
+    assertEquals(1, trie.getFrequency("HELLO"));
 
-    List<WordFrequency> completions = trie.findCompletions("a", 10);
+    List<WordFrequency> completions = trie.findCompletions("h", 10);
     assertEquals(1, completions.size());
-    assertEquals("apple", completions.get(0).word());
+    assertEquals("hello", completions.get(0).word());
+  }
+
+  @Test
+  void saveAndLoadPreservesAllData() throws IOException {
+    trie.insert("hello");
+    trie.insert("world");
+    trie.insert("hello");
+    trie.insert("java");
+    trie.insert("programming");
+
+    Path tempFile = Files.createTempFile("trie", ".dat");
+    File file = tempFile.toFile();
+
+    try {
+      trie.saveToFile(file);
+
+      Trie loadedTrie = new Trie();
+      loadedTrie.loadFromFile(file);
+
+      // Проверяем что все данные сохранились
+      assertEquals(trie.getFrequency("hello"), loadedTrie.getFrequency("hello"));
+      assertEquals(trie.getFrequency("world"), loadedTrie.getFrequency("world"));
+      assertEquals(trie.getFrequency("java"), loadedTrie.getFrequency("java"));
+      assertEquals(trie.getFrequency("programming"), loadedTrie.getFrequency("programming"));
+
+      // Проверяем что несуществующие слова возвращают 0
+      assertEquals(0, loadedTrie.getFrequency("nonexistent"));
+
+      // Проверяем топ слова
+      List<WordFrequency> originalTop = trie.getTopFrequentWords(10);
+      List<WordFrequency> loadedTop = loadedTrie.getTopFrequentWords(10);
+      assertEquals(originalTop, loadedTop);
+
+      // Проверяем автодополнения
+      List<WordFrequency> originalCompletions = trie.findCompletions("h", 10);
+      List<WordFrequency> loadedCompletions = loadedTrie.findCompletions("h", 10);
+      assertEquals(originalCompletions, loadedCompletions);
+
+    } finally {
+      Files.deleteIfExists(tempFile);
+    }
+  }
+
+  @Test
+  void constructorFromFileCreatesTrieWithLoadedData() throws IOException {
+    trie.insert("apple");
+    trie.insert("banana");
+    trie.insert("apple");
+
+    Path tempFile = Files.createTempFile("trie", ".dat");
+    File file = tempFile.toFile();
+
+    try {
+      trie.saveToFile(file);
+
+      Trie loadedTrie = new Trie(file);
+
+      // Проверяем что данные загрузились
+      assertEquals(2, loadedTrie.getFrequency("apple"));
+      assertEquals(1, loadedTrie.getFrequency("banana"));
+
+    } finally {
+      Files.deleteIfExists(tempFile);
+    }
+  }
+
+  @Test
+  void saveToFileNullFileThrowsException() {
+    assertThrows(IllegalArgumentException.class, () -> trie.saveToFile(null));
+  }
+
+  @Test
+  void loadFromFileNullFileThrowsException() {
+    assertThrows(IllegalArgumentException.class, () -> trie.loadFromFile(null));
+  }
+
+  @Test
+  void loadFromFileNonExistentFileThrowsException() {
+    File nonExistentFile = new File("nonexistent.trie");
+    assertThrows(IllegalArgumentException.class, () -> trie.loadFromFile(nonExistentFile));
+  }
+
+  @Test
+  void loadFromFileInvalidFormatThrowsException() throws IOException {
+    Path tempFile = Files.createTempFile("invalid", ".trie");
+    File file = tempFile.toFile();
+
+    try {
+      // Записываем неверные данные
+      Files.write(tempFile, "invalid data".getBytes());
+
+      assertThrows(IllegalArgumentException.class, () -> trie.loadFromFile(file));
+    } finally {
+      Files.deleteIfExists(tempFile);
+    }
+  }
+
+  @Test
+  void saveAndLoadEmptyTrieWorks() throws IOException {
+    Trie emptyTrie = new Trie();
+
+    Path tempFile = Files.createTempFile("empty", ".trie");
+    File file = tempFile.toFile();
+
+    try {
+      emptyTrie.saveToFile(file);
+
+      Trie loadedTrie = new Trie();
+      loadedTrie.loadFromFile(file);
+
+      // Проверяем что trie остался пустым
+      assertEquals(0, loadedTrie.getAllWords().size());
+      assertEquals(0, loadedTrie.getTopFrequentWords(10).size());
+
+    } finally {
+      Files.deleteIfExists(tempFile);
+    }
+  }
+
+  @Test
+  void saveAndLoadComplexStructureWorks() throws IOException {
+    trie.insert("cat");
+    trie.insert("car");
+    trie.insert("card");
+    trie.insert("care");
+    trie.insert("careful");
+    trie.insert("carefully");
+    trie.insert("careless");
+    trie.insert("careless");
+
+    Path tempFile = Files.createTempFile("complex", ".trie");
+    File file = tempFile.toFile();
+
+    try {
+      trie.saveToFile(file);
+
+      Trie loadedTrie = new Trie();
+      loadedTrie.loadFromFile(file);
+
+      // Проверяем что все данные сохранились
+      Map<String, Integer> originalWords = trie.getAllWords();
+      Map<String, Integer> loadedWords = loadedTrie.getAllWords();
+      assertEquals(originalWords, loadedWords);
+
+      // Проверяем автодополнения для разных префиксов
+      List<WordFrequency> originalCaCompletions = trie.findCompletions("ca", 10);
+      List<WordFrequency> loadedCaCompletions = loadedTrie.findCompletions("ca", 10);
+      assertEquals(originalCaCompletions, loadedCaCompletions);
+
+      List<WordFrequency> originalCareCompletions = trie.findCompletions("care", 10);
+      List<WordFrequency> loadedCareCompletions = loadedTrie.findCompletions("care", 10);
+      assertEquals(originalCareCompletions, loadedCareCompletions);
+
+    } finally {
+      Files.deleteIfExists(tempFile);
+    }
+  }
+
+  @Test
+  void saveAndLoadWithUnicodeCharactersWorks() throws IOException {
+    // Тестируем с Unicode символами
+    trie.insert("café");
+    trie.insert("résumé");
+    trie.insert("naïve");
+    trie.insert("naïve");
+    trie.insert("привет");
+    trie.insert("こんにちは");
+
+    Path tempFile = Files.createTempFile("unicode", ".trie");
+    File file = tempFile.toFile();
+
+    try {
+      trie.saveToFile(file);
+
+      Trie loadedTrie = new Trie();
+      loadedTrie.loadFromFile(file);
+
+      // Проверяем что все Unicode данные сохранились
+      assertEquals(1, loadedTrie.getFrequency("café"));
+      assertEquals(1, loadedTrie.getFrequency("résumé"));
+      assertEquals(2, loadedTrie.getFrequency("naïve"));
+      assertEquals(1, loadedTrie.getFrequency("привет"));
+      assertEquals(1, loadedTrie.getFrequency("こんにちは"));
+
+    } finally {
+      Files.deleteIfExists(tempFile);
+    }
   }
 }
