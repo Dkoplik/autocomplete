@@ -1,14 +1,14 @@
 package io.github.autocomplete.util;
 
 import io.github.autocomplete.model.WordFrequency;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -19,8 +19,8 @@ import java.util.function.BiFunction;
  * Реализация префиксного дерева с подсчётом частоты слов.
  */
 public class Trie {
-  public final int MAGIC_NUMBER = 0x54524945; // "TRIE" в hex
-  public final int VERSION = 1;
+  public static final int MAGIC_NUMBER = 0x54524945; // "TRIE" в hex
+  public static final int VERSION = 1;
 
   private final TrieNode root;
 
