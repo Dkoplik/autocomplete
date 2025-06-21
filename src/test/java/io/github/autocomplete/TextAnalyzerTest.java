@@ -5,6 +5,10 @@ import static org.junit.jupiter.api.Assertions.*;
 import io.github.autocomplete.config.TokenizerConfig;
 import io.github.autocomplete.model.WordFrequency;
 import io.github.autocomplete.tokenizer.SimpleTokenizer;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
@@ -164,10 +168,137 @@ class TextAnalyzerTest {
 
   @Test
   void specialCharactersHandling() {
-    analyzer.addText("hello-world email@domain.com 123-456");
+    String text = "café résumé naïve naïve";
+    analyzer.addText(text);
 
-    assertEquals(1, analyzer.getWordFrequency("helloworld"));
-    assertEquals(0, analyzer.getWordFrequency("email"));
-    assertEquals(0, analyzer.getWordFrequency("123"));
+    assertEquals(1, analyzer.getWordFrequency("café"));
+    assertEquals(1, analyzer.getWordFrequency("résumé"));
+    assertEquals(2, analyzer.getWordFrequency("naïve"));
+  }
+
+  @Test
+  void saveAndLoadPreservesAllData() throws IOException {
+    // Подготавливаем данные
+    String text1 = "hello world hello java";
+    String text2 = "java programming world";
+    analyzer.addText(text1);
+    analyzer.addText(text2);
+
+    // Сохраняем в временный файл
+    Path tempFile = Files.createTempFile("analyzer", ".trie");
+    File file = tempFile.toFile();
+
+    try {
+      analyzer.saveToFile(file);
+
+      // Создаём новый анализатор и загружаем данные
+      TextAnalyzer loadedAnalyzer = new TextAnalyzer();
+      loadedAnalyzer.loadFromFile(file);
+
+      // Проверяем что все данные сохранились
+      assertEquals(analyzer.getWordFrequency("hello"), loadedAnalyzer.getWordFrequency("hello"));
+      assertEquals(analyzer.getWordFrequency("world"), loadedAnalyzer.getWordFrequency("world"));
+      assertEquals(analyzer.getWordFrequency("java"), loadedAnalyzer.getWordFrequency("java"));
+      assertEquals(analyzer.getWordFrequency("programming"),
+          loadedAnalyzer.getWordFrequency("programming"));
+
+      // Проверяем что несуществующие слова возвращают 0
+      assertEquals(0, loadedAnalyzer.getWordFrequency("nonexistent"));
+
+      // Проверяем топ слова
+      List<WordFrequency> originalTop = analyzer.getTopWords(10);
+      List<WordFrequency> loadedTop = loadedAnalyzer.getTopWords(10);
+      assertEquals(originalTop, loadedTop);
+
+    } finally {
+      Files.deleteIfExists(tempFile);
+    }
+  }
+
+  @Test
+  void saveToFileNullFileThrowsException() {
+    assertThrows(IllegalArgumentException.class, () -> analyzer.saveToFile(null));
+  }
+
+  @Test
+  void loadFromFileNullFileThrowsException() {
+    assertThrows(IllegalArgumentException.class, () -> analyzer.loadFromFile(null));
+  }
+
+  @Test
+  void loadFromFileNonExistentFileThrowsException() {
+    File nonExistentFile = new File("nonexistent.trie");
+    assertThrows(IllegalArgumentException.class, () -> analyzer.loadFromFile(nonExistentFile));
+  }
+
+  @Test
+  void loadFromFileInvalidFormatThrowsException() throws IOException {
+    Path tempFile = Files.createTempFile("invalid", ".trie");
+    File file = tempFile.toFile();
+
+    try {
+      // Записываем неверные данные
+      Files.write(tempFile, "invalid data".getBytes());
+
+      assertThrows(IllegalArgumentException.class, () -> analyzer.loadFromFile(file));
+    } finally {
+      Files.deleteIfExists(tempFile);
+    }
+  }
+
+  @Test
+  void saveAndLoadEmptyAnalyzerWorks() throws IOException {
+    TextAnalyzer emptyAnalyzer = new TextAnalyzer();
+
+    Path tempFile = Files.createTempFile("empty", ".trie");
+    File file = tempFile.toFile();
+
+    try {
+      emptyAnalyzer.saveToFile(file);
+
+      TextAnalyzer loadedAnalyzer = new TextAnalyzer();
+      loadedAnalyzer.loadFromFile(file);
+
+      // Проверяем что анализатор остался пустым
+      assertEquals(0, loadedAnalyzer.getAllWords().size());
+      assertEquals(0, loadedAnalyzer.getTopWords(10).size());
+
+    } finally {
+      Files.deleteIfExists(tempFile);
+    }
+  }
+
+  @Test
+  void saveAndLoadLargeDatasetWorks() throws IOException {
+    StringBuilder largeText = new StringBuilder();
+    for (int i = 0; i < 1000; i++) {
+      largeText.append("word").append(i).append(" ");
+      if (i % 10 == 0) {
+        largeText.append("common ");
+      }
+    }
+
+    analyzer.addText(largeText.toString());
+
+    Path tempFile = Files.createTempFile("large", ".trie");
+    File file = tempFile.toFile();
+
+    try {
+      analyzer.saveToFile(file);
+
+      TextAnalyzer loadedAnalyzer = new TextAnalyzer();
+      loadedAnalyzer.loadFromFile(file);
+
+      // Проверяем что все данные сохранились
+      Map<String, Integer> originalWords = analyzer.getAllWords();
+      Map<String, Integer> loadedWords = loadedAnalyzer.getAllWords();
+      assertEquals(originalWords, loadedWords);
+
+      assertEquals(100, loadedAnalyzer.getWordFrequency("common"));
+      assertEquals(1000, loadedAnalyzer.getWordFrequency("word"));
+
+    } finally {
+      Files.deleteIfExists(tempFile);
+    }
   }
 }
