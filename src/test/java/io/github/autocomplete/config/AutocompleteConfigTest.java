@@ -1,9 +1,8 @@
-package io.github.autocomplete;
+package io.github.autocomplete.config;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import io.github.autocomplete.util.Levenshtein;
 import java.util.function.BiFunction;
 import org.junit.jupiter.api.Test;

@@ -3,12 +3,12 @@ package io.github.autocomplete;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
-
-import io.github.autocomplete.util.Candidate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import io.github.autocomplete.config.AutocompleteConfig;
+import io.github.autocomplete.model.Candidate;
 
 class AutocompleteProviderTest {
 

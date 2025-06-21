@@ -1,4 +1,4 @@
-package io.github.autocomplete.util;
+package io.github.autocomplete.model;
 
 import static org.junit.jupiter.api.Assertions.*;
 

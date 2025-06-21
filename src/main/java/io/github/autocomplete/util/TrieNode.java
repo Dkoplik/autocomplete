@@ -1,4 +1,4 @@
-package io.github.autocomplete;
+package io.github.autocomplete.util;
 
 import java.util.HashMap;
 import java.util.Map;

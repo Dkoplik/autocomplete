@@ -1,9 +1,8 @@
-package io.github.autocomplete.tokenizer;
+package io.github.autocomplete.config;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.function.Predicate;
-
 import org.junit.jupiter.api.Test;
 
 // Есть ли смысл тестировать record TokenizerConfig?

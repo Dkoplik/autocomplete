@@ -14,9 +14,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import io.github.autocomplete.config.AutocompleteConfig;
+import io.github.autocomplete.config.TokenizerConfig;
+import io.github.autocomplete.model.Candidate;
 import io.github.autocomplete.tokenizer.SimpleTokenizer;
-import io.github.autocomplete.tokenizer.TokenizerConfig;
-import io.github.autocomplete.util.Candidate;
 
 /**
  * Стресс-тесты для AutocompleteProvider

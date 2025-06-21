@@ -1,8 +1,9 @@
 package io.github.autocomplete;
 
 import io.github.autocomplete.cache.LRUCache;
-import io.github.autocomplete.util.Candidate;
-import io.github.autocomplete.util.WordFrequency;
+import io.github.autocomplete.config.AutocompleteConfig;
+import io.github.autocomplete.model.Candidate;
+import io.github.autocomplete.model.WordFrequency;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;

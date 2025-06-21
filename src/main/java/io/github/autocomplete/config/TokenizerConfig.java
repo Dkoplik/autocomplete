@@ -1,4 +1,4 @@
-package io.github.autocomplete.tokenizer;
+package io.github.autocomplete.config;
 
 import java.util.function.Predicate;
 

@@ -1,10 +1,9 @@
 package io.github.autocomplete;
 
 import static org.junit.jupiter.api.Assertions.*;
-
+import io.github.autocomplete.config.TokenizerConfig;
+import io.github.autocomplete.model.WordFrequency;
 import io.github.autocomplete.tokenizer.SimpleTokenizer;
-import io.github.autocomplete.tokenizer.TokenizerConfig;
-import io.github.autocomplete.util.WordFrequency;
 import java.util.List;
 import java.util.Map;
 
