@@ -21,7 +21,7 @@ class TextAnalyzerTest {
   }
 
   @Test
-  void processText_WithDefaultTokenizer_UpdatesWordFrequencies() {
+  void processTextWithDefaultTokenizerUpdatesWordFrequencies() {
     analyzer.addText("Apple apple Banana apple Cherry");
 
     assertEquals(3, analyzer.getWordFrequency("apple"));
@@ -30,7 +30,7 @@ class TextAnalyzerTest {
   }
 
   @Test
-  void processText_WithCustomTokenizer_RespectsConfiguration() {
+  void processTextWithCustomTokenizerRespectsConfiguration() {
     TokenizerConfig config =
         new TokenizerConfig("\\s+", c -> Character.isLetter(c) || c == '-', false);
     SimpleTokenizer tokenizer = new SimpleTokenizer();
@@ -46,13 +46,13 @@ class TextAnalyzerTest {
   }
 
   @Test
-  void getWordFrequency_ForNonExistentWord_ReturnsZero() {
+  void getWordFrequencyForNonExistentWordReturnsZero() {
     analyzer.addText("test");
     assertEquals(0, analyzer.getWordFrequency("missing"));
   }
 
   @Test
-  void getTopWords_ReturnsHighestFrequencyWords() {
+  void getTopWordsReturnsHighestFrequencyWords() {
     analyzer.addText("apple banana apple cherry apple banana");
 
     List<WordFrequency> topWords = analyzer.getTopWords(2);
@@ -62,7 +62,7 @@ class TextAnalyzerTest {
   }
 
   @Test
-  void getAllWords_ReturnsCompleteWordMap() {
+  void getAllWordsReturnsCompleteWordMap() {
     analyzer.addText("apple apple banana");
 
     Map<String, Integer> allWords = analyzer.getAllWords();
@@ -72,7 +72,7 @@ class TextAnalyzerTest {
   }
 
   @Test
-  void removeWord_SetsFrequencyToZero() {
+  void removeWordSetsFrequencyToZero() {
     analyzer.addText("test test");
     analyzer.removeWord("test");
 
@@ -81,7 +81,7 @@ class TextAnalyzerTest {
   }
 
   @Test
-  void getWordsByRegex_FiltersWordsCorrectly() {
+  void getWordsByRegexFiltersWordsCorrectly() {
     analyzer.addText("apple applet application banana bandana cherry");
 
     // Все слова, начинающиеся на "app"
@@ -100,13 +100,13 @@ class TextAnalyzerTest {
   }
 
   @Test
-  void getWordsByRegex_WithNoMatches_ReturnsEmptyMap() {
+  void getWordsByRegexWithNoMatchesReturnsEmptyMap() {
     analyzer.addText("apple banana");
     assertTrue(analyzer.getWordsByRegex("xyz.*").isEmpty());
   }
 
   @Test
-  void complexWorkflow_CombinedOperations() {
+  void complexWorkflowCombinedOperations() {
     analyzer.addText("The quick brown fox jumps over the lazy dog");
     analyzer.addText("The quick dog jumps over the lazy fox");
 
@@ -136,7 +136,7 @@ class TextAnalyzerTest {
   }
 
   @Test
-  void caseSensitivity_WithDefaultTokenizer() {
+  void caseSensitivityWithDefaultTokenizer() {
     analyzer.addText("Apple apple APPLE");
 
     assertEquals(3, analyzer.getWordFrequency("apple"));
@@ -147,7 +147,7 @@ class TextAnalyzerTest {
   }
 
   @Test
-  void emptyTextProcessing_DoesNotChangeState() {
+  void emptyTextProcessingDoesNotChangeState() {
     analyzer.addText("");
     assertTrue(analyzer.getAllWords().isEmpty());
 
@@ -156,7 +156,7 @@ class TextAnalyzerTest {
   }
 
   @Test
-  void getTokenizer_ReturnsConfiguredTokenizer() {
+  void getTokenizerReturnsConfiguredTokenizer() {
     SimpleTokenizer customTokenizer = new SimpleTokenizer();
     TextAnalyzer customAnalyzer = new TextAnalyzer(customTokenizer);
 

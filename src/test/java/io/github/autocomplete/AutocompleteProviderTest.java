@@ -22,7 +22,7 @@ class AutocompleteProviderTest {
   }
 
   @Test
-  void getAutocomplete_WithValidPrefix_ReturnsCompletions() {
+  void getAutocompleteWithValidPrefixReturnsCompletions() {
     provider.addText("application apple applet");
 
     List<Candidate> completions = provider.getAutocomplete("app", 10);
@@ -31,7 +31,7 @@ class AutocompleteProviderTest {
   }
 
   @Test
-  void getAutocomplete_WithCache_ReturnsCachedResults() {
+  void getAutocompleteWithCacheReturnsCachedResults() {
     provider = new AutocompleteProvider(textAnalyzer, 10);
     provider.addText("application apple applet");
 
@@ -44,7 +44,7 @@ class AutocompleteProviderTest {
   }
 
   @Test
-  void getAutocomplete_WithoutCache_AlwaysCalculates() {
+  void getAutocompleteWithoutCacheAlwaysCalculates() {
     provider = new AutocompleteProvider(textAnalyzer, 0); // Без кеша
     provider.addText("application apple applet");
 
@@ -55,24 +55,25 @@ class AutocompleteProviderTest {
     assertEquals(firstCall, secondCall);
   }
 
-  void getAutocomplete_InvalidPrefix_ThrowsException() {
+  @Test
+  void getAutocompleteInvalidPrefixThrowsException() {
     String prefix = "";
     assertThrows(IllegalArgumentException.class, () -> provider.getAutocomplete(prefix, 5));
   }
 
   @Test
-  void getAutocomplete_NullPrefix_ThrowsException() {
+  void getAutocompleteNullPrefixThrowsException() {
     assertThrows(IllegalArgumentException.class, () -> provider.getAutocomplete(null, 5));
   }
 
   @ParameterizedTest
   @ValueSource(ints = {0, -1, -10})
-  void getAutocomplete_InvalidLimit_ThrowsException(int limit) {
+  void getAutocompleteInvalidLimitThrowsException(int limit) {
     assertThrows(IllegalArgumentException.class, () -> provider.getAutocomplete("valid", limit));
   }
 
   @Test
-  void processText_UpdatesUnderlyingData() {
+  void processTextUpdatesUnderlyingData() {
     provider.addText("apple application");
     List<Candidate> initial = provider.getAutocomplete("app", 10);
     assertEquals(2, initial.size());
@@ -83,7 +84,7 @@ class AutocompleteProviderTest {
   }
 
   @Test
-  void cache_DoesInvalidateAfterProcessText() {
+  void cacheDoesInvalidateAfterProcessText() {
     provider = new AutocompleteProvider(textAnalyzer, 10);
     provider.addText("apple application");
 
@@ -96,7 +97,7 @@ class AutocompleteProviderTest {
   }
 
   @Test
-  void cache_RespectsSizeLimit() {
+  void cacheRespectsSizeLimit() {
     provider = new AutocompleteProvider(textAnalyzer, 2);
     provider.addText("apple application");
 
@@ -109,7 +110,7 @@ class AutocompleteProviderTest {
   }
 
   @Test
-  void complexWorkflow_WithCache() {
+  void complexWorkflowWithCache() {
     provider = new AutocompleteProvider(textAnalyzer, 5);
 
     provider.addText("java javascript python");
@@ -124,7 +125,7 @@ class AutocompleteProviderTest {
   }
 
   @Test
-  void zeroCacheSize_DisablesCaching() {
+  void zeroCacheSizeDisablesCaching() {
     provider = new AutocompleteProvider(textAnalyzer, 0);
     provider.addText("test tests");
 
@@ -136,12 +137,12 @@ class AutocompleteProviderTest {
   }
 
   @Test
-  void negativeCacheSize_ThrowsExcpetion() {
+  void negativeCacheSizeThrowsExcpetion() {
     assertThrows(IllegalArgumentException.class, () -> new AutocompleteProvider(textAnalyzer, -1));
   }
 
   @Test
-  void getAutocomplete_TypoTolerance_SuggestsSimilar() {
+  void getAutocompleteTypoToleranceSuggestsSimilar() {
     AutocompleteConfig config =
         new AutocompleteConfig(io.github.autocomplete.util.Levenshtein::distance, 1, 1, 0.5, 1.0);
     provider = new AutocompleteProvider(textAnalyzer, config, 10);
@@ -153,7 +154,7 @@ class AutocompleteProviderTest {
   }
 
   @Test
-  void getAutocomplete_TypoTolerance_Threshold() {
+  void getAutocompleteTypoToleranceThreshold() {
     AutocompleteConfig config =
         new AutocompleteConfig(io.github.autocomplete.util.Levenshtein::distance, 5, 1, 0.5, 1.0);
     provider = new AutocompleteProvider(textAnalyzer, config, 10);
@@ -165,7 +166,7 @@ class AutocompleteProviderTest {
   }
 
   @Test
-  void getAutocomplete_TypoTolerance_Weights() {
+  void getAutocompleteTypoToleranceWeights() {
     AutocompleteConfig config =
         new AutocompleteConfig(io.github.autocomplete.util.Levenshtein::distance, 1, 1, 0.1, 1.0);
     provider = new AutocompleteProvider(textAnalyzer, config, 10);
@@ -179,7 +180,7 @@ class AutocompleteProviderTest {
   }
 
   @Test
-  void getAutocomplete_Cache_ReusesLargerLimit() {
+  void getAutocompleteCacheReusesLargerLimit() {
     provider.addText("apple application applet");
     List<Candidate> big = provider.getAutocomplete("app", 10);
     List<Candidate> small = provider.getAutocomplete("app", 2);
@@ -187,7 +188,7 @@ class AutocompleteProviderTest {
   }
 
   @Test
-  void getAutocomplete_Cache_DifferentLimitMiss() {
+  void getAutocompleteCacheDifferentLimitMiss() {
     provider.addText("apple application applet");
     List<Candidate> small = provider.getAutocomplete("app", 2);
     List<Candidate> big = provider.getAutocomplete("app", 10);
@@ -197,7 +198,7 @@ class AutocompleteProviderTest {
   }
 
   @Test
-  void getAutocomplete_Cache_SimilarPrefixCache() {
+  void getAutocompleteCacheSimilarPrefixCache() {
     AutocompleteConfig config =
         new AutocompleteConfig(io.github.autocomplete.util.Levenshtein::distance, 1, 1, 0.5, 1.0);
     provider = new AutocompleteProvider(textAnalyzer, config, 10);

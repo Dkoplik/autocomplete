@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class AutocompleteConfigTest {
   @Test
-  void defaultConstructor_SetsExpectedValues() {
+  void defaultConstructorSetsExpectedValues() {
     AutocompleteConfig config = new AutocompleteConfig();
     assertNotNull(config.distanceFunction());
     assertEquals(0, config.toleranceThreshold());
@@ -19,7 +19,7 @@ class AutocompleteConfigTest {
   }
 
   @Test
-  void parameterizedConstructor_SetsProvidedValues() {
+  void parameterizedConstructorSetsProvidedValues() {
     BiFunction<String, String, Integer> fn = (a, b) -> 42;
     AutocompleteConfig config = new AutocompleteConfig(fn, 2, 3, 0.7, 2.0);
     assertEquals(fn, config.distanceFunction());
@@ -30,19 +30,19 @@ class AutocompleteConfigTest {
   }
 
   @Test
-  void constructor_NullDistanceFunction_ThrowsException() {
+  void constructorNullDistanceFunctionThrowsException() {
     assertThrows(IllegalArgumentException.class,
         () -> new AutocompleteConfig(null, 1, 1, 0.5, 1.0));
   }
 
   @Test
-  void constructor_NegativeToleranceThreshold_ThrowsException() {
+  void constructorNegativeToleranceThresholdThrowsException() {
     assertThrows(IllegalArgumentException.class,
         () -> new AutocompleteConfig(Levenshtein::distance, -1, 1, 0.5, 1.0));
   }
 
   @Test
-  void constructor_NegativeTolerance_ThrowsException() {
+  void constructorNegativeToleranceThrowsException() {
     assertThrows(IllegalArgumentException.class,
         () -> new AutocompleteConfig(Levenshtein::distance, 1, -1, 0.5, 1.0));
   }

@@ -74,7 +74,7 @@ class TextAnalyzerStressTest {
 
   @Test
   @Timeout(value = 1, unit = TimeUnit.MINUTES)
-  void processLargeText_Performance() {
+  void processLargeTextPerformance() {
     String largeText = generateLargeText(LARGE_DATA_SIZE);
 
     long startTime = System.nanoTime();
@@ -108,7 +108,7 @@ class TextAnalyzerStressTest {
 
   @Test
   @Timeout(value = 10, unit = TimeUnit.SECONDS)
-  void getTopWords_LargeDataset_Performance() {
+  void getTopWordsLargeDatasetPerformance() {
     String largeText = generateLargeText(LARGE_DATA_SIZE);
     analyzer.addText(largeText);
 
@@ -125,7 +125,7 @@ class TextAnalyzerStressTest {
 
   @Test
   @Timeout(value = 10, unit = TimeUnit.SECONDS)
-  void getAllWords_LargeDataset_Performance() {
+  void getAllWordsLargeDatasetPerformance() {
     String largeText = generateLargeText(LARGE_DATA_SIZE);
     analyzer.addText(largeText);
 
@@ -142,7 +142,7 @@ class TextAnalyzerStressTest {
 
   @Test
   @Timeout(value = 10, unit = TimeUnit.SECONDS)
-  void multipleProcessTextCalls_Performance() {
+  void multipleProcessTextCallsPerformance() {
     int chunks = 10;
     int chunkSize = LARGE_DATA_SIZE / chunks;
 
@@ -165,7 +165,7 @@ class TextAnalyzerStressTest {
 
   @Test
   @Timeout(value = 10, unit = TimeUnit.SECONDS)
-  void getWordsByRegex_LargeDataset_Performance() {
+  void getWordsByRegexLargeDatasetPerformance() {
     String largeText = generateLargeText(LARGE_DATA_SIZE);
     analyzer.addText(largeText);
 

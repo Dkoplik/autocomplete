@@ -80,7 +80,7 @@ class AutocompleteProviderStressTest {
 
   @Test
   @Timeout(value = 10, unit = TimeUnit.SECONDS)
-  void processLargeText_Performance() {
+  void processLargeTextPerformance() {
     String largeText = generateLargeText(LARGE_DATA_SIZE);
     provider = new AutocompleteProvider(textAnalyzer);
 
@@ -94,7 +94,7 @@ class AutocompleteProviderStressTest {
 
   @Test
   @Timeout(value = 30, unit = TimeUnit.SECONDS)
-  void processVeryLargeText_Performance() {
+  void processVeryLargeTextPerformance() {
     String veryLargeText = generateLargeText(VERY_LARGE_DATA_SIZE);
     provider = new AutocompleteProvider(textAnalyzer);
 
@@ -108,7 +108,7 @@ class AutocompleteProviderStressTest {
 
   @Test
   @Timeout(value = 10, unit = TimeUnit.SECONDS)
-  void getAutocomplete_WithoutCache_Performance() {
+  void getAutocompleteWithoutCachePerformance() {
     String largeText = generateLargeText(LARGE_DATA_SIZE);
     provider = new AutocompleteProvider(textAnalyzer, 0); // Без кеша
 
@@ -134,7 +134,7 @@ class AutocompleteProviderStressTest {
 
   @Test
   @Timeout(value = 10, unit = TimeUnit.SECONDS)
-  void getAutocomplete_WithCache_Performance() {
+  void getAutocompleteWithCachePerformance() {
     String largeText = generateLargeText(LARGE_DATA_SIZE);
     provider = new AutocompleteProvider(textAnalyzer, 100); // С кешем
 
@@ -167,7 +167,7 @@ class AutocompleteProviderStressTest {
 
   @Test
   @Timeout(value = 10, unit = TimeUnit.SECONDS)
-  void mixedWorkload_Performance() {
+  void mixedWorkloadPerformance() {
     provider = new AutocompleteProvider(textAnalyzer, 100); // С кешем
 
     int chunks = 10;
@@ -203,7 +203,7 @@ class AutocompleteProviderStressTest {
   @ParameterizedTest
   @ValueSource(ints = {0, 10, 100, 1000})
   @Timeout(value = 10, unit = TimeUnit.SECONDS)
-  void cacheSizeImpact_Performance(int cacheSize) {
+  void cacheSizeImpactPerformance(int cacheSize) {
     String largeText = generateLargeText(LARGE_DATA_SIZE);
     provider = new AutocompleteProvider(textAnalyzer, cacheSize);
     provider.addText(largeText);
@@ -229,7 +229,7 @@ class AutocompleteProviderStressTest {
 
   @Test
   @Timeout(value = 10, unit = TimeUnit.SECONDS)
-  void cacheEfficiency_WithRepeatedQueries() {
+  void cacheEfficiencyWithRepeatedQueries() {
     String largeText = generateLargeText(LARGE_DATA_SIZE);
     provider = new AutocompleteProvider(textAnalyzer, 100);
     provider.addText(largeText);
@@ -263,7 +263,7 @@ class AutocompleteProviderStressTest {
 
   @Test
   @Timeout(value = 10, unit = TimeUnit.SECONDS)
-  void getAutocomplete_TypoTolerance_Performance() {
+  void getAutocompleteTypoTolerancePerformance() {
     String largeText = generateLargeText(LARGE_DATA_SIZE);
     AutocompleteConfig config =
         new AutocompleteConfig(io.github.autocomplete.util.Levenshtein::distance, 3, 1, 0.5, 1.0);
@@ -286,7 +286,7 @@ class AutocompleteProviderStressTest {
 
   @Test
   @Timeout(value = 10, unit = TimeUnit.SECONDS)
-  void getAutocomplete_TypoTolerance_CacheStress() {
+  void getAutocompleteTypoToleranceCacheStress() {
     String largeText = generateLargeText(LARGE_DATA_SIZE);
     AutocompleteConfig config =
         new AutocompleteConfig(io.github.autocomplete.util.Levenshtein::distance, 3, 1, 0.5, 1.0);

@@ -19,7 +19,7 @@ class TrieTest {
   }
 
   @Test
-  void insert_AndGetFrequency_BasicOperations() {
+  void insertAndGetFrequencyBasicOperations() {
     trie.insert("hello");
     trie.insert("hello");
     trie.insert("world");
@@ -30,12 +30,12 @@ class TrieTest {
   }
 
   @Test
-  void insert_EmptyString_ThrowsException() {
+  void insertEmptyStringThrowsException() {
     assertThrows(IllegalArgumentException.class, () -> trie.insert(""));
   }
 
   @Test
-  void remove_SetsFrequencyToZero() {
+  void removeSetsFrequencyToZero() {
     trie.insert("test");
     trie.insert("test");
 
@@ -47,7 +47,7 @@ class TrieTest {
   }
 
   @Test
-  void remove_TrulyDelete_RemovesWordAndPrunesNodes() {
+  void removeTrulyDeleteRemovesWordAndPrunesNodes() {
     trie.insert("car");
     trie.insert("cart");
     trie.insert("carpet");
@@ -89,7 +89,7 @@ class TrieTest {
   }
 
   @Test
-  void remove_TrulyDelete_ReinsertAfterDeletion() {
+  void removeTrulyDeleteReinsertAfterDeletion() {
     trie.insert("hello");
     trie.remove("hello", true);
     assertEquals(0, trie.getFrequency("hello"));
@@ -98,7 +98,7 @@ class TrieTest {
   }
 
   @Test
-  void clear_RemovesAllWords() {
+  void clearRemovesAllWords() {
     trie.insert("one");
     trie.insert("two");
     trie.insert("three");
@@ -110,7 +110,7 @@ class TrieTest {
   }
 
   @Test
-  void getAllWords_ReturnsCompleteWordList() {
+  void getAllWordsReturnsCompleteWordList() {
     trie.insert("apple");
     trie.insert("apple");
     trie.insert("app");
@@ -128,7 +128,7 @@ class TrieTest {
   }
 
   @Test
-  void findCompletions_WithPrefix_ReturnsTopMatches() {
+  void findCompletionsWithPrefixReturnsTopMatches() {
     trie.insert("apple");
     trie.insert("apple");
     trie.insert("application");
@@ -153,7 +153,7 @@ class TrieTest {
   }
 
   @Test
-  void findCompletions_NonExistentPrefix_ReturnsEmptyList() {
+  void findCompletionsNonExistentPrefixReturnsEmptyList() {
     trie.insert("apple");
     trie.insert("banana");
 
@@ -161,7 +161,7 @@ class TrieTest {
   }
 
   @Test
-  void findCompletions_EmptyPrefix_ThrowsException() {
+  void findCompletionsEmptyPrefixThrowsException() {
     trie.insert("apple");
     trie.insert("banana");
     trie.insert("cherry");
@@ -170,7 +170,7 @@ class TrieTest {
   }
 
   @Test
-  void getTopFrequentWords_ReturnsHighestFrequencyWords() {
+  void getTopFrequentWordsReturnsHighestFrequencyWords() {
     trie.insert("apple");
     trie.insert("apple");
     trie.insert("apple");
@@ -199,7 +199,7 @@ class TrieTest {
   }
 
   @Test
-  void getTopFrequentWords_WithTies_OrdersAlphabetically() {
+  void getTopFrequentWordsWithTiesOrdersAlphabetically() {
     trie.insert("apple");
     trie.insert("apple");
     trie.insert("banana");
@@ -214,7 +214,7 @@ class TrieTest {
   }
 
   @Test
-  void getTopFrequentWords_WithLimitLargerThanWords_ReturnsAll() {
+  void getTopFrequentWordsWithLimitLargerThanWordsReturnsAll() {
     trie.insert("a");
     trie.insert("b");
 
@@ -223,7 +223,7 @@ class TrieTest {
   }
 
   @Test
-  void getTopFrequentWords_WithZeroOrNegativeLimit_ThrowsException() {
+  void getTopFrequentWordsWithZeroOrNegativeLimitThrowsException() {
     trie.insert("apple");
 
     assertThrows(IllegalArgumentException.class, () -> trie.getTopFrequentWords(0));
@@ -231,7 +231,7 @@ class TrieTest {
   }
 
   @Test
-  void complexScenario_CombinedOperations() {
+  void complexScenarioCombinedOperations() {
     trie.insert("run");
     trie.insert("runner");
     trie.insert("running");

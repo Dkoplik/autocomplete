@@ -1,37 +1,38 @@
 package io.github.autocomplete.util;
 
-import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 class LevenshteinTest {
+
   @Test
-  void distance_IdenticalStrings_ReturnsZero() {
+  void distanceIdenticalStringsReturnsZero() {
     assertEquals(0, Levenshtein.distance("kitten", "kitten"));
     assertEquals(0, Levenshtein.distance("", ""));
   }
 
   @Test
-  void distance_EmptyString_ReturnsLengthOfOther() {
+  void distanceEmptyStringReturnsLengthOfOther() {
     assertEquals(6, Levenshtein.distance("kitten", ""));
     assertEquals(6, Levenshtein.distance("", "kitten"));
   }
 
   @Test
-  void distance_SingleEditCases() {
+  void distanceSingleEditCases() {
     assertEquals(1, Levenshtein.distance("kitten", "sitten"));
     assertEquals(1, Levenshtein.distance("kitten", "kitte"));
     assertEquals(1, Levenshtein.distance("kitten", "kittena"));
   }
 
   @Test
-  void distance_MultipleEdits() {
+  void distanceMultipleEdits() {
     assertEquals(3, Levenshtein.distance("kitten", "sitting"));
     assertEquals(2, Levenshtein.distance("flaw", "lawn"));
     assertEquals(5, Levenshtein.distance("intention", "execution"));
   }
 
   @Test
-  void distance_CaseSensitivity() {
+  void distanceCaseSensitivity() {
     assertEquals(1, Levenshtein.distance("abc", "Abc"));
   }
 }

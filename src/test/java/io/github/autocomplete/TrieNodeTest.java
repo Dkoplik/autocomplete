@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 class TrieNodeTest {
 
   @Test
-  void constructor_InitializesEmptyNode() {
+  void constructorInitializesEmptyNode() {
     TrieNode node = new TrieNode();
 
     assertTrue(node.getChildren().isEmpty());
@@ -15,7 +15,7 @@ class TrieNodeTest {
   }
 
   @Test
-  void frequencyMethods_WorkCorrectly() {
+  void frequencyMethodsWorkCorrectly() {
     TrieNode node = new TrieNode();
 
     node.setFrequency(5);
@@ -29,7 +29,7 @@ class TrieNodeTest {
   }
 
   @Test
-  void childrenMap_IsMutable() {
+  void childrenMapIsMutable() {
     TrieNode node = new TrieNode();
     TrieNode child = new TrieNode();
 

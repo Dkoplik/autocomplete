@@ -281,8 +281,9 @@ class Trie {
     List<String> result = new java.util.ArrayList<>();
     if (prefix.length() < threshold) {
       TrieNode node = getNode(prefix);
-      if (node != null)
+      if (node != null) {
         result.add(prefix);
+      }
       return result;
     }
     collectSimilarPrefixes(root, new StringBuilder(), prefix, tolerance, distanceFunction, result);

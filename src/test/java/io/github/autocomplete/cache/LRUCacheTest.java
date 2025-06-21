@@ -15,7 +15,7 @@ class LRUCacheTest {
   }
 
   @Test
-  void get_WhenKeyExists_ReturnsValueAndUpdatesRecency() {
+  void getWhenKeyExistsReturnsValueAndUpdatesRecency() {
     cache.put(1, "One");
     cache.put(2, "Two");
 
@@ -30,14 +30,14 @@ class LRUCacheTest {
   }
 
   @Test
-  void get_WhenKeyMissing_ReturnsNull() {
+  void getWhenKeyMissingReturnsNull() {
     assertNull(cache.get(1));
     cache.put(1, "One");
     assertNull(cache.get(2));
   }
 
   @Test
-  void put_WhenCacheNotFull_AddsElements() {
+  void putWhenCacheNotFullAddsElements() {
     cache.put(1, "One");
     cache.put(2, "Two");
 
@@ -46,7 +46,7 @@ class LRUCacheTest {
   }
 
   @Test
-  void put_WhenCacheFull_EvictsLeastRecentlyUsed() {
+  void putWhenCacheFullEvictsLeastRecentlyUsed() {
     cache.put(1, "One");
     cache.put(2, "Two");
     cache.put(3, "Three");
@@ -62,7 +62,7 @@ class LRUCacheTest {
   }
 
   @Test
-  void put_WhenKeyExists_UpdatesValueAndRecency() {
+  void putWhenKeyExistsUpdatesValueAndRecency() {
     cache.put(1, "One");
     cache.put(2, "Two");
 
@@ -78,7 +78,7 @@ class LRUCacheTest {
   }
 
   @Test
-  void evictionOrder_WhenMixedOperations_EvictsCorrectly() {
+  void evictionOrderWhenMixedOperationsEvictsCorrectly() {
     cache.put(1, "One");
     cache.put(2, "Two");
     cache.get(1);
@@ -93,7 +93,7 @@ class LRUCacheTest {
   }
 
   @Test
-  void zeroCapacityCache_IgnoresAllPuts() {
+  void zeroCapacityCacheIgnoresAllPuts() {
     LRUCache<Integer, String> zeroCache = new LRUCache<>(0);
     zeroCache.put(1, "One");
     assertNull(zeroCache.get(1));
@@ -103,7 +103,7 @@ class LRUCacheTest {
   }
 
   @Test
-  void singleItemCache_EvictsProperly() {
+  void singleItemCacheEvictsProperly() {
     LRUCache<Integer, String> singleCache = new LRUCache<>(1);
     singleCache.put(1, "One");
     assertEquals("One", singleCache.get(1));
@@ -114,7 +114,7 @@ class LRUCacheTest {
   }
 
   @Test
-  void repeatedAccess_UpdatesRecencyWithoutEviction() {
+  void repeatedAccessUpdatesRecencyWithoutEviction() {
     cache.put(1, "One");
     cache.put(2, "Two");
     cache.put(3, "Three");
@@ -132,7 +132,7 @@ class LRUCacheTest {
   }
 
   @Test
-  void complexSequence_CorrectlyMaintainsOrder() {
+  void complexSequenceCorrectlyMaintainsOrder() {
     cache.put(1, "A");
     cache.put(2, "B");
     cache.get(1);
@@ -158,7 +158,7 @@ class LRUCacheTest {
   }
 
   @Test
-  void clear_RemovesAllElements() {
+  void clearRemovesAllElements() {
     cache.put(1, "One");
     cache.put(2, "Two");
     cache.put(3, "Three");
@@ -171,7 +171,7 @@ class LRUCacheTest {
   }
 
   @Test
-  void clear_ResetsInternalState() {
+  void clearResetsInternalState() {
     cache.put(1, "One");
     cache.put(2, "Two");
 
@@ -193,7 +193,7 @@ class LRUCacheTest {
   }
 
   @Test
-  void clear_OnEmptyCache_DoesNothing() {
+  void clearOnEmptyCacheDoesNothing() {
     assertDoesNotThrow(() -> cache.clear());
 
     cache.put(1, "One");
@@ -201,7 +201,7 @@ class LRUCacheTest {
   }
 
   @Test
-  void clear_ResetsAccessOrder() {
+  void clearResetsAccessOrder() {
     cache.put(1, "One");
     cache.put(2, "Two");
     cache.put(3, "Three");
@@ -224,7 +224,7 @@ class LRUCacheTest {
   }
 
   @Test
-  void clear_WithSingleElement() {
+  void clearWithSingleElement() {
     cache.put(1, "One");
     cache.clear();
 
@@ -232,7 +232,7 @@ class LRUCacheTest {
   }
 
   @Test
-  void clear_FollowedByOperations_WorksCorrectly() {
+  void clearFollowedByOperationsWorksCorrectly() {
     cache.put(1, "One");
     cache.clear();
 
@@ -251,7 +251,7 @@ class LRUCacheTest {
   }
 
   @Test
-  void multipleClearCalls_WorkConsistently() {
+  void multipleClearCallsWorkConsistently() {
     cache.put(1, "One");
     cache.clear();
 

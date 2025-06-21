@@ -56,7 +56,7 @@ class TrieStressTest {
 
   @Test
   @Timeout(value = 20, unit = TimeUnit.SECONDS)
-  void insertLargeDataset_Performance() {
+  void insertLargeDatasetPerformance() {
     long startTime = System.nanoTime();
 
     for (int i = 0; i < LARGE_DATA_SIZE; i++) {
@@ -75,7 +75,7 @@ class TrieStressTest {
 
   @Test
   @Timeout(value = 40, unit = TimeUnit.SECONDS)
-  void insertVeryLargeDataset_Performance() {
+  void insertVeryLargeDatasetPerformance() {
     long startTime = System.nanoTime();
 
     for (int i = 0; i < VERY_LARGE_DATA_SIZE; i++) {
@@ -93,7 +93,7 @@ class TrieStressTest {
 
   @Test
   @Timeout(value = 40, unit = TimeUnit.SECONDS)
-  void findCompletions_Performance() {
+  void findCompletionsPerformance() {
     for (int i = 0; i < LARGE_DATA_SIZE; i++) {
       String word = dictionary.get(random.nextInt(UNIQUE_WORDS));
       trie.insert(word);
@@ -120,7 +120,7 @@ class TrieStressTest {
 
   @Test
   @Timeout(value = 20, unit = TimeUnit.SECONDS)
-  void getTopFrequentWords_Performance() {
+  void getTopFrequentWordsPerformance() {
     for (int i = 0; i < LARGE_DATA_SIZE; i++) {
       String word = dictionary.get(random.nextInt(UNIQUE_WORDS));
       trie.insert(word);
@@ -139,7 +139,7 @@ class TrieStressTest {
 
   @Test
   @Timeout(value = 20, unit = TimeUnit.SECONDS)
-  void getAllWords_Performance() {
+  void getAllWordsPerformance() {
     for (int i = 0; i < LARGE_DATA_SIZE; i++) {
       String word = dictionary.get(random.nextInt(UNIQUE_WORDS));
       trie.insert(word);
@@ -158,7 +158,7 @@ class TrieStressTest {
 
   @Test
   @Timeout(value = 1, unit = TimeUnit.MINUTES)
-  void mixedOperations_Performance() {
+  void mixedOperationsPerformance() {
     int operationsCount = LARGE_DATA_SIZE;
     double insertChance = 0.7;
     double findCompletionsChance = 0.2999;
@@ -208,7 +208,7 @@ class TrieStressTest {
 
   @Test
   @Timeout(value = 20, unit = TimeUnit.SECONDS)
-  void removeWords_Performance() {
+  void removeWordsPerformance() {
     for (int i = 0; i < LARGE_DATA_SIZE; i++) {
       String word = dictionary.get(random.nextInt(UNIQUE_WORDS));
       trie.insert(word);

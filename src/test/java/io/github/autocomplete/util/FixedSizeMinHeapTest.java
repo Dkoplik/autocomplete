@@ -16,7 +16,7 @@ class FixedSizeMinHeapTest {
   }
 
   @Test
-  void add_WhenHeapNotFull_AddsElements() {
+  void addWhenHeapNotFullAddsElements() {
     heap.add(new WordFrequency("A", 5));
     heap.add(new WordFrequency("B", 3));
     heap.add(new WordFrequency("C", 7));
@@ -29,7 +29,7 @@ class FixedSizeMinHeapTest {
   }
 
   @Test
-  void add_WhenNewElementLargerThanMin_ReplacesMin() {
+  void addWhenNewElementLargerThanMinReplacesMin() {
     heap.add(new WordFrequency("A", 5));
     heap.add(new WordFrequency("B", 3));
     heap.add(new WordFrequency("C", 7));
@@ -43,7 +43,7 @@ class FixedSizeMinHeapTest {
   }
 
   @Test
-  void add_WhenNewElementSmallerThanMin_KeepsHeap() {
+  void addWhenNewElementSmallerThanMinKeepsHeap() {
     heap.add(new WordFrequency("A", 5));
     heap.add(new WordFrequency("B", 3));
     heap.add(new WordFrequency("C", 7));
@@ -55,7 +55,7 @@ class FixedSizeMinHeapTest {
   }
 
   @Test
-  void add_WithSameFrequencyDifferentWords_OrdersCorrectly() {
+  void addWithSameFrequencyDifferentWordsOrdersCorrectly() {
     heap.add(new WordFrequency("A", 5));
     heap.add(new WordFrequency("B", 5));
     heap.add(new WordFrequency("C", 5));
@@ -67,7 +67,7 @@ class FixedSizeMinHeapTest {
   }
 
   @Test
-  void toSortedList_ReturnsDescendingOrder() {
+  void toSortedListReturnsDescendingOrder() {
     heap.add(new WordFrequency("C", 7));
     heap.add(new WordFrequency("A", 5));
     heap.add(new WordFrequency("B", 3));
@@ -79,14 +79,14 @@ class FixedSizeMinHeapTest {
   }
 
   @Test
-  void add_WhenHeapSizeZero_IgnoresElements() {
+  void addWhenHeapSizeZeroIgnoresElements() {
     FixedSizeMinHeap emptyHeap = new FixedSizeMinHeap(0);
     emptyHeap.add(new WordFrequency("A", 5));
     assertTrue(emptyHeap.toSortedList().isEmpty());
   }
 
   @Test
-  void add_WhenHeapSizeOne_MaintainsSingleElement() {
+  void addWhenHeapSizeOneMaintainsSingleElement() {
     FixedSizeMinHeap singleHeap = new FixedSizeMinHeap(1);
     singleHeap.add(new WordFrequency("A", 5));
     singleHeap.add(new WordFrequency("B", 10));
@@ -97,7 +97,7 @@ class FixedSizeMinHeapTest {
   }
 
   @Test
-  void add_WithEqualElements_HandlesCorrectly() {
+  void addWithEqualElementsHandlesCorrectly() {
     heap.add(new WordFrequency("A", 5));
     heap.add(new WordFrequency("A", 5));
     heap.add(new WordFrequency("B", 5));

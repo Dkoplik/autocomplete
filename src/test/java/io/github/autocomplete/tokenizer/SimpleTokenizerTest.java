@@ -20,17 +20,17 @@ class SimpleTokenizerTest {
   }
 
   @Test
-  void tokenize_NullInput_ThrowsException() {
+  void tokenizeNullInputThrowsException() {
     assertThrows(IllegalArgumentException.class, () -> tokenizer.tokenize(null));
   }
 
   @Test
-  void tokenize_EmptyInput_ReturnsEmptyStream() {
+  void tokenizeEmptyInputReturnsEmptyStream() {
     assertTrue(tokenizer.tokenize("").collect(Collectors.toList()).isEmpty());
   }
 
   @Test
-  void tokenize_WithDefaultConfig_SplitsAndFiltersCorrectly() {
+  void tokenizeWithDefaultConfigSplitsAndFiltersCorrectly() {
     String input = "Hello, World! This is a test.";
     List<String> tokens = tokenizer.tokenize(input).collect(Collectors.toList());
 
@@ -38,7 +38,7 @@ class SimpleTokenizerTest {
   }
 
   @Test
-  void tokenize_WithNumbersAndSymbols_FiltersCorrectly() {
+  void tokenizeWithNumbersAndSymbolsFiltersCorrectly() {
     String input = "Price: $19.99 - 50% off!";
     List<String> tokens = tokenizer.tokenize(input).collect(Collectors.toList());
 
@@ -46,7 +46,7 @@ class SimpleTokenizerTest {
   }
 
   @Test
-  void tokenize_WithCustomSplitRegex_SplitsCorrectly() {
+  void tokenizeWithCustomSplitRegexSplitsCorrectly() {
     TokenizerConfig config = new TokenizerConfig("[- ]", Character::isLetter, true);
     tokenizer.setConfig(config);
 
@@ -57,7 +57,7 @@ class SimpleTokenizerTest {
   }
 
   @Test
-  void tokenize_WithCustomCharFilter_IncludesNumbers() {
+  void tokenizeWithCustomCharFilterIncludesNumbers() {
     TokenizerConfig config =
         new TokenizerConfig("\\s+", c -> Character.isLetter(c) || Character.isDigit(c), true);
     tokenizer.setConfig(config);
@@ -69,7 +69,7 @@ class SimpleTokenizerTest {
   }
 
   @Test
-  void tokenize_WithoutLowerCase_KeepsOriginalCase() {
+  void tokenizeWithoutLowerCaseKeepsOriginalCase() {
     TokenizerConfig config = new TokenizerConfig("\\s+", Character::isLetter, false);
     tokenizer.setConfig(config);
 
@@ -80,7 +80,7 @@ class SimpleTokenizerTest {
   }
 
   @Test
-  void tokenize_WithMixedCharacters_ProcessesCorrectly() {
+  void tokenizeWithMixedCharactersProcessesCorrectly() {
     String input = "  Extra   spaces...  \nNew\tLines!  ";
     List<String> tokens = tokenizer.tokenize(input).collect(Collectors.toList());
 
@@ -89,12 +89,12 @@ class SimpleTokenizerTest {
 
   @ParameterizedTest
   @ValueSource(strings = {"!@#$%^&*()", "123.456", "  \t\n  "})
-  void tokenize_NoValidCharacters_ReturnsEmptyStream(String input) {
+  void tokenizeNoValidCharactersReturnsEmptyStream(String input) {
     assertTrue(tokenizer.tokenize(input).collect(Collectors.toList()).isEmpty());
   }
 
   @Test
-  void tokenize_WithUnicodeCharacters_HandlesCorrectly() {
+  void tokenizeWithUnicodeCharactersHandlesCorrectly() {
     String input = "Привет! こんにちは 안녕하세요";
     List<String> tokens = tokenizer.tokenize(input).collect(Collectors.toList());
 
@@ -103,7 +103,7 @@ class SimpleTokenizerTest {
   }
 
   @Test
-  void setConfig_ChangesTokenizerBehavior() {
+  void setConfigChangesTokenizerBehavior() {
     // Исходная конфигурация
     String input = "Test123";
     List<String> initialTokens = tokenizer.tokenize(input).collect(Collectors.toList());
@@ -119,7 +119,7 @@ class SimpleTokenizerTest {
   }
 
   @Test
-  void getConfig_ReturnsCurrentConfiguration() {
+  void getConfigReturnsCurrentConfiguration() {
     TokenizerConfig defaultConfig = tokenizer.getConfig();
     assertEquals("\\s+", defaultConfig.splitRegex());
     assertTrue(defaultConfig.toLowerCase());

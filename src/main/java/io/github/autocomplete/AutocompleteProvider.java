@@ -147,8 +147,9 @@ public class AutocompleteProvider {
     String lookupPrefix = isCaseInsensitive() ? prefix.toLowerCase() : prefix;
 
     List<Candidate> cached = getCachedCandidates(key, limit);
-    if (cached != null)
+    if (cached != null) {
       return cached;
+    }
     List<Candidate> candidates =
         (config.tolerance() <= 0) ? getExactPrefixCandidates(lookupPrefix, limit)
             : getTypoToleranceCandidates(lookupPrefix, limit, key);
@@ -225,8 +226,9 @@ public class AutocompleteProvider {
       seen.add(wf.word());
     }
     for (String simPrefix : similarPrefixes) {
-      if (simPrefix.equals(prefix))
+      if (simPrefix.equals(prefix)) {
         continue;
+      }
       List<WordFrequency> sim = textAnalyzer.getTrie().findCompletions(simPrefix, limit);
       for (WordFrequency wf : sim) {
         if (seen.add(wf.word())) {
