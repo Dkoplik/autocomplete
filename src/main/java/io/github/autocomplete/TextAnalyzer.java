@@ -1,8 +1,9 @@
 package io.github.autocomplete;
 
+import io.github.autocomplete.model.WordFrequency;
 import io.github.autocomplete.tokenizer.SimpleTokenizer;
 import io.github.autocomplete.tokenizer.Tokenizer;
-import io.github.autocomplete.util.WordFrequency;
+import io.github.autocomplete.util.Trie;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;

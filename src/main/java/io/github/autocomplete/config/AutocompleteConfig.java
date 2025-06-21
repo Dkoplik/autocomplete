@@ -1,4 +1,4 @@
-package io.github.autocomplete;
+package io.github.autocomplete.config;
 
 import io.github.autocomplete.util.Levenshtein;
 import java.util.function.BiFunction;

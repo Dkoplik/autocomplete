@@ -1,7 +1,6 @@
-package io.github.autocomplete;
+package io.github.autocomplete.util;
 
-import io.github.autocomplete.util.FixedSizeMinHeap;
-import io.github.autocomplete.util.WordFrequency;
+import io.github.autocomplete.model.WordFrequency;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -11,7 +10,7 @@ import java.util.function.BiFunction;
 /**
  * Реализация префиксного дерева с подсчётом частоты слов.
  */
-class Trie {
+public class Trie {
   private final TrieNode root;
 
   /**

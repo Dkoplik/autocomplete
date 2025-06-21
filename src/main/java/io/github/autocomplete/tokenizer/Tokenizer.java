@@ -1,5 +1,6 @@
 package io.github.autocomplete.tokenizer;
 
+import io.github.autocomplete.config.TokenizerConfig;
 import java.util.stream.Stream;
 
 /**

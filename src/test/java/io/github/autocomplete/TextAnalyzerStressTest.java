@@ -2,16 +2,15 @@ package io.github.autocomplete;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import io.github.autocomplete.config.TokenizerConfig;
+import io.github.autocomplete.model.WordFrequency;
 import io.github.autocomplete.tokenizer.SimpleTokenizer;
-import io.github.autocomplete.tokenizer.TokenizerConfig;
-import io.github.autocomplete.util.WordFrequency;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;

@@ -1,4 +1,4 @@
-package io.github.autocomplete.util;
+package io.github.autocomplete.model;
 
 /**
  * Record для хранения слова и его частоты (frequency).

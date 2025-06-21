@@ -2,9 +2,9 @@ package io.github.autocomplete.tokenizer;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import io.github.autocomplete.config.TokenizerConfig;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
