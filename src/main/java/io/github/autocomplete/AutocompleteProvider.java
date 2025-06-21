@@ -1,14 +1,13 @@
 package io.github.autocomplete;
 
+import io.github.autocomplete.cache.LRUCache;
+import io.github.autocomplete.util.Candidate;
+import io.github.autocomplete.util.WordFrequency;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import io.github.autocomplete.cache.LRUCache;
-import io.github.autocomplete.util.Candidate;
-import io.github.autocomplete.util.WordFrequency;
 
 /**
  * Поставщик автодополнений с опциональным кешированием.
@@ -22,9 +21,9 @@ public class AutocompleteProvider {
 
   /**
    * Инициализация автодополнений на основе текстового анализатора.
-   * 
+   *
    * @param textAnalyzer Текстовый анализатор на основе которого определяются автодополнения
-   * 
+   *
    * @throws IllegalArgumentException Если textAnalyzer равен null
    */
   public AutocompleteProvider(TextAnalyzer textAnalyzer) {
@@ -33,13 +32,13 @@ public class AutocompleteProvider {
 
   /**
    * Инициализация автодополнений на основе текстового анализатора.
-   * 
+   *
    * @param textAnalyzer Текстовый анализатор на основе которого определяются автодополнения
-   * 
+   *
    * @param cacheSize Размер LRU-кеша
-   * 
+   *
    * @throws IllegalArgumentException Если cacheSize меньше 0
-   * 
+   *
    * @throws IllegalArgumentException Если textAnalyzer равен null
    */
   public AutocompleteProvider(TextAnalyzer textAnalyzer, int cacheSize) {
@@ -48,13 +47,13 @@ public class AutocompleteProvider {
 
   /**
    * Инициализация автодополнений с конфигом.
-   * 
+   *
    * @param textAnalyzer Текстовый анализатор на основе которого определяются автодополнения
-   * 
+   *
    * @param config Конфигурация автодополнений
-   * 
+   *
    * @throws IllegalArgumentException Если config равен null
-   * 
+   *
    * @throws IllegalArgumentException Если textAnalyzer равен null
    */
   public AutocompleteProvider(TextAnalyzer textAnalyzer, AutocompleteConfig config) {
@@ -63,17 +62,17 @@ public class AutocompleteProvider {
 
   /**
    * Инициализация автодополнений на основе текстового анализатора.
-   * 
+   *
    * @param textAnalyzer Текстовый анализатор на основе которого определяются автодополнения
-   * 
+   *
    * @param config Конфигурация автодополнений
-   * 
+   *
    * @param cacheSize Размер LRU-кеша
-   * 
+   *
    * @throws IllegalArgumentException Если cacheSize меньше 0
-   * 
+   *
    * @throws IllegalArgumentException Если config равен null
-   * 
+   *
    * @throws IllegalArgumentException Если textAnalyzer равен null
    */
   public AutocompleteProvider(TextAnalyzer textAnalyzer, AutocompleteConfig config, int cacheSize) {
@@ -95,7 +94,7 @@ public class AutocompleteProvider {
 
   /**
    * Получить конфигурацию автодополнения {@link AutocompleteConfig}.
-   * 
+   *
    * @return Конфигурация автодополнения
    */
   public AutocompleteConfig getConfig() {
@@ -104,9 +103,9 @@ public class AutocompleteProvider {
 
   /**
    * Установить конфигурацию автодополнения {@link AutocompleteConfig}. Сбрасывает кеш.
-   * 
+   *
    * @param config Конфигурация автодополнения
-   * 
+   *
    * @throws IllegalArgumentException Если config равен null
    */
   public void setConfig(AutocompleteConfig config) {
@@ -127,11 +126,11 @@ public class AutocompleteProvider {
    * Получить варианты автодополнения с учётом конфигурации (опечатки, веса и т.д.).
    *
    * @param prefix Префикс на основе которго происходит автодополнение
-   * 
+   *
    * @param limit максимальное количество вариантов автодополнения
-   * 
+   *
    * @return Список вариантов автодополнения
-   * 
+   *
    * @throws IllegalArgumentException Если prefix равен null или пустой строке ИЛИ limit меньше или
    *         равен 0
    */

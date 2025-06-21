@@ -5,12 +5,12 @@ package io.github.autocomplete.util;
  */
 public record WordFrequency(String word, int frequency) implements Comparable<WordFrequency> {
   /**
-   * Создает запись для слова и его частоты
-   * 
+   * Создает запись для слова и его частоты.
+   *
    * @param word Слово
-   * 
+   *
    * @param frequency Частота
-   * 
+   *
    * @throws IllegalArgumentException Если частота меньше 0
    */
   public WordFrequency {
@@ -20,10 +20,10 @@ public record WordFrequency(String word, int frequency) implements Comparable<Wo
   }
 
   /**
-   * Сравнивает слова по частоте, если частота одинаковая, то по слову
-   * 
+   * Сравнивает слова по частоте, если частота одинаковая, то по слову.
+   *
    * @param other Другое слово
-   * 
+   *
    * @return Результат сравнения
    */
   @Override

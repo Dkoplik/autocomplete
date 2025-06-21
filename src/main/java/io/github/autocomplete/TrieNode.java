@@ -20,7 +20,7 @@ class TrieNode {
 
   /**
    * Возвращает дочерние узлы.
-   * 
+   *
    * @return Дочерние узлы
    */
   public Map<Character, TrieNode> getChildren() {
@@ -29,7 +29,7 @@ class TrieNode {
 
   /**
    * Возвращает частоту узла.
-   * 
+   *
    * @return Частота узла
    */
   public int getFrequency() {
@@ -38,9 +38,9 @@ class TrieNode {
 
   /**
    * Устанавливает частоту узла.
-   * 
+   *
    * @param frequency Частота узла
-   * 
+   *
    * @throws IllegalArgumentException Если frequency меньше 0
    */
   public void setFrequency(int frequency) {

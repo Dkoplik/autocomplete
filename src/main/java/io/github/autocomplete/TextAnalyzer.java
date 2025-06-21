@@ -1,12 +1,12 @@
 package io.github.autocomplete;
 
+import io.github.autocomplete.tokenizer.SimpleTokenizer;
+import io.github.autocomplete.tokenizer.Tokenizer;
+import io.github.autocomplete.util.WordFrequency;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
-import io.github.autocomplete.util.WordFrequency;
 import java.util.stream.Collectors;
-import io.github.autocomplete.tokenizer.SimpleTokenizer;
-import io.github.autocomplete.tokenizer.Tokenizer;
 
 /**
  * Анализатор текста для подсчёта частоты слов и их поиска. Позволяет указать токенизатор по

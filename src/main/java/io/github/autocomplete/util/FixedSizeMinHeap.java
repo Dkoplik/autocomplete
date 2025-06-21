@@ -13,9 +13,9 @@ public class FixedSizeMinHeap {
 
   /**
    * Создает кучу с указанным максимальным размером
-   * 
+   *
    * @param maxSize Максимальное количество элементов в куче
-   * 
+   *
    * @throws IllegalArgumentException Если maxSize меньше 0
    */
   public FixedSizeMinHeap(int maxSize) {
@@ -29,9 +29,9 @@ public class FixedSizeMinHeap {
 
   /**
    * Добавляет элемент в кучу, сохраняя свойства кучи
-   * 
+   *
    * @param wordFrequency Элемент для добавления
-   * 
+   *
    * @throws IllegalArgumentException Если wordFrequency равен null
    */
   public void add(WordFrequency wordFrequency) {
@@ -50,7 +50,7 @@ public class FixedSizeMinHeap {
 
   /**
    * Преобразует кучу в отсортированный по убыванию список
-   * 
+   *
    * @return Отсортированный список элементов
    */
   public List<WordFrequency> toSortedList() {
@@ -61,7 +61,7 @@ public class FixedSizeMinHeap {
 
   /**
    * Поднимает элемент вверх по куче, восстанавливая свойства кучи
-   * 
+   *
    * @param index Индекс элемента для подъема
    */
   private void siftUp(int index) {
@@ -78,7 +78,7 @@ public class FixedSizeMinHeap {
 
   /**
    * Опускает элемент вниз по куче, восстанавливая свойства кучи
-   * 
+   *
    * @param index Индекс элемента для опускания
    */
   private void siftDown(int index) {

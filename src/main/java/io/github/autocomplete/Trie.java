@@ -23,9 +23,9 @@ class Trie {
 
   /**
    * Вставляет слово в дерево, увеличивая его частоту на 1.
-   * 
+   *
    * @param word Слово для вставки
-   * 
+   *
    * @throws IllegalArgumentException Если word равен null или пустой строке
    */
   public void insert(String word) {
@@ -48,11 +48,11 @@ class Trie {
 
   /**
    * Возвращает частоту слова (сколько раз оно было добавлено).
-   * 
+   *
    * @param word Слово для поиска
-   * 
+   *
    * @return Частота слова
-   * 
+   *
    * @throws IllegalArgumentException Если word равен null или пустой строке
    */
   public int getFrequency(String word) {
@@ -66,11 +66,11 @@ class Trie {
 
   /**
    * Удаляет слово из дерева (устанавливает частоту в 0 или полностью удаляет, если trulyDelete).
-   * 
+   *
    * @param word Слово для удаления
-   * 
+   *
    * @param trulyDelete Если true, полностью удаляет слово и неиспользуемые узлы
-   * 
+   *
    * @throws IllegalArgumentException Если word равен null или пустой строке
    */
   public void remove(String word, boolean trulyDelete) {
@@ -90,9 +90,9 @@ class Trie {
 
   /**
    * Удаляет слово из дерева (устанавливает частоту в 0).
-   * 
+   *
    * @param word Слово для удаления
-   * 
+   *
    * @throws IllegalArgumentException Если word равен null или пустой строке
    */
   public void remove(String word) {
@@ -101,7 +101,7 @@ class Trie {
 
   /**
    * Рекурсивно удаляет слово и "обрезает" неиспользуемые узлы.
-   * 
+   *
    * @return true, если текущий узел можно удалить из родителя
    */
   private boolean removeAndPrune(TrieNode node, String word, int index) {
@@ -125,9 +125,9 @@ class Trie {
 
   /**
    * Возвращает узел, соответствующий данному слову.
-   * 
+   *
    * @param word Слово для поиска
-   * 
+   *
    * @return Узел, соответствующий данному слову
    */
   private TrieNode getNode(String word) {
@@ -144,7 +144,7 @@ class Trie {
 
   /**
    * Возвращает все слова с их частотами.
-   * 
+   *
    * @return Все слова с их частотами
    */
   public Map<String, Integer> getAllWords() {
@@ -167,13 +167,13 @@ class Trie {
 
   /**
    * Ищет автодополнения для префикса (без учёта опечаток).
-   * 
+   *
    * @param prefix Префикс для поиска
-   * 
+   *
    * @param limit Максимальное количество результатов
-   * 
+   *
    * @return Список кандидатов, отсортированных по частоте
-   * 
+   *
    * @throws IllegalArgumentException Если prefix равен null или пустой строке ИЛИ limit меньше 1
    */
   public List<WordFrequency> findCompletions(String prefix, int limit) {
@@ -209,11 +209,11 @@ class Trie {
 
   /**
    * Возвращает топ-N самых частых слов.
-   * 
-   * @param n Количество возвращаемых слов
-   * 
-   * @return Список WordFrequency, отсортированных по частоте (от наиболее к наименее частому)
-   * 
+   *
+   * @param n Количество слов
+   *
+   * @return Список из топ-N самых частых слов
+   *
    * @throws IllegalArgumentException Если n меньше или равно 0
    */
   public List<WordFrequency> getTopFrequentWords(int n) {
@@ -249,17 +249,17 @@ class Trie {
   /**
    * Возвращает список префиксов в дереве, находящихся на расстоянии <= tolerance от заданного
    * префикса. Для коротких префиксов (длина < threshold) возвращает только точные совпадения.
-   * 
+   *
    * @param prefix Префикс для поиска
-   * 
+   *
    * @param tolerance Максимальное расстояние между строками
-   * 
+   *
    * @param threshold Пороговое значение длины строки, для которой применяется толерантность
-   * 
+   *
    * @param distanceFunction Функция расстояния между двумя строками
-   * 
+   *
    * @return Список префиксов, находящихся на расстоянии <= tolerance от заданного префикса
-   * 
+   *
    * @throws IllegalArgumentException Если prefix равен null или пустой строке ИЛИ tolerance меньше
    *         0 ИЛИ threshold меньше 0 ИЛИ distanceFunction равен null
    */

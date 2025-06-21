@@ -6,23 +6,27 @@ package io.github.autocomplete.util;
 public class Levenshtein {
   /**
    * Вычисляет расстояние Левенштейна между двумя строками.
-   * 
+   *
    * @param a Первая строка
-   * 
+   *
    * @param b Вторая строка
-   * 
+   *
    * @return Расстояние Левенштейна
    */
   public static int distance(String a, String b) {
-    int m = a.length(), n = b.length();
-    if (m == 0)
+    int m = a.length();
+    int n = b.length();
+    if (m == 0) {
       return n;
-    if (n == 0)
+    }
+    if (n == 0) {
       return m;
+    }
     int[] prev = new int[n + 1];
     int[] curr = new int[n + 1];
-    for (int j = 0; j <= n; j++)
+    for (int j = 0; j <= n; j++) {
       prev[j] = j;
+    }
     for (int i = 1; i <= m; i++) {
       curr[0] = i;
       for (int j = 1; j <= n; j++) {
