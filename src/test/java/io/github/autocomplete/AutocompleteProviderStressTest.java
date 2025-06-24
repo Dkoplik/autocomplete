@@ -28,7 +28,7 @@ class AutocompleteProviderStressTest {
   private static final int LARGE_DATA_SIZE = 1_000_000;
   private static final int VERY_LARGE_DATA_SIZE = 5_000_000;
   private static final int UNIQUE_WORDS = 50_000;
-  private static final int QUERY_COUNT = 10_000;
+  private static final int QUERY_COUNT = 100_000;
   private static final int TOP_RESULTS_LIMIT = 100;
 
   private TextAnalyzer textAnalyzer;
@@ -107,7 +107,7 @@ class AutocompleteProviderStressTest {
   }
 
   @Test
-  @Timeout(value = 10, unit = TimeUnit.SECONDS)
+  @Timeout(value = 60, unit = TimeUnit.SECONDS)
   void getAutocompleteWithoutCachePerformance() {
     String largeText = generateLargeText(LARGE_DATA_SIZE);
     provider = new AutocompleteProvider(textAnalyzer, 0); // Без кеша
@@ -127,13 +127,12 @@ class AutocompleteProviderStressTest {
       assertTrue(results.size() <= TOP_RESULTS_LIMIT);
     }
 
-    System.out.printf("%,d queries without cache took: %d ms (avg: %.2f ms/query)%n", QUERY_COUNT,
-        TimeUnit.NANOSECONDS.toMillis(totalDuration),
-        (double) TimeUnit.NANOSECONDS.toMillis(totalDuration) / QUERY_COUNT);
+    System.out.printf("%,d queries without cache took: %d ms (avg: %d ns/query)%n", QUERY_COUNT,
+        TimeUnit.NANOSECONDS.toMillis(totalDuration), totalDuration / QUERY_COUNT);
   }
 
   @Test
-  @Timeout(value = 10, unit = TimeUnit.SECONDS)
+  @Timeout(value = 60, unit = TimeUnit.SECONDS)
   void getAutocompleteWithCachePerformance() {
     String largeText = generateLargeText(LARGE_DATA_SIZE);
     provider = new AutocompleteProvider(textAnalyzer, 100); // С кешем
@@ -222,16 +221,16 @@ class AutocompleteProviderStressTest {
       totalDuration += System.nanoTime() - startTime;
     }
 
-    System.out.printf("Cache size %,d: %,d queries took %d ms (avg: %.2f ms/query)%n", cacheSize,
+    System.out.printf("Cache size %,d: %,d queries took %d ms (avg: %d ns/query)%n", cacheSize,
         QUERY_COUNT, TimeUnit.NANOSECONDS.toMillis(totalDuration),
-        (double) TimeUnit.NANOSECONDS.toMillis(totalDuration) / QUERY_COUNT);
+        (int) totalDuration / QUERY_COUNT);
   }
 
   @Test
-  @Timeout(value = 10, unit = TimeUnit.SECONDS)
+  @Timeout(value = 60, unit = TimeUnit.SECONDS)
   void cacheEfficiencyWithRepeatedQueries() {
     String largeText = generateLargeText(LARGE_DATA_SIZE);
-    provider = new AutocompleteProvider(textAnalyzer, 100);
+    provider = new AutocompleteProvider(textAnalyzer, QUERY_COUNT / 10);
     provider.addText(largeText);
 
     List<String> repeatedPrefixes = popularPrefixes.subList(0, 10);
@@ -265,8 +264,8 @@ class AutocompleteProviderStressTest {
   @Timeout(value = 10, unit = TimeUnit.SECONDS)
   void getAutocompleteTypoTolerancePerformance() {
     String largeText = generateLargeText(LARGE_DATA_SIZE);
-    AutocompleteConfig config =
-        new AutocompleteConfig(io.github.autocomplete.distance.Levenshtein::distance, 3, 1, 0.5, 1.0);
+    AutocompleteConfig config = new AutocompleteConfig(
+        io.github.autocomplete.distance.Levenshtein::distance, 3, 1, 0.5, 1.0);
     provider = new AutocompleteProvider(textAnalyzer, config, 100);
     provider.addText(largeText);
     long totalDuration = 0;
@@ -279,17 +278,16 @@ class AutocompleteProviderStressTest {
       assertNotNull(results);
       assertTrue(results.size() <= TOP_RESULTS_LIMIT);
     }
-    System.out.printf("Typo-tolerant %,d queries took: %d ms (avg: %.2f ms/query)%n", QUERY_COUNT,
-        TimeUnit.NANOSECONDS.toMillis(totalDuration),
-        (double) TimeUnit.NANOSECONDS.toMillis(totalDuration) / QUERY_COUNT);
+    System.out.printf("Typo-tolerant %,d queries took: %d ms (avg: %d ns/query)%n", QUERY_COUNT,
+        TimeUnit.NANOSECONDS.toMillis(totalDuration), (int) totalDuration / QUERY_COUNT);
   }
 
   @Test
   @Timeout(value = 10, unit = TimeUnit.SECONDS)
   void getAutocompleteTypoToleranceCacheStress() {
     String largeText = generateLargeText(LARGE_DATA_SIZE);
-    AutocompleteConfig config =
-        new AutocompleteConfig(io.github.autocomplete.distance.Levenshtein::distance, 3, 1, 0.5, 1.0);
+    AutocompleteConfig config = new AutocompleteConfig(
+        io.github.autocomplete.distance.Levenshtein::distance, 3, 1, 0.5, 1.0);
     provider = new AutocompleteProvider(textAnalyzer, config, 100);
     provider.addText(largeText);
     for (int i = 0; i < QUERY_COUNT; i++) {
