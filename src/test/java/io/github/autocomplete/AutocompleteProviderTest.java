@@ -144,7 +144,7 @@ class AutocompleteProviderTest {
   @Test
   void getAutocompleteTypoToleranceSuggestsSimilar() {
     AutocompleteConfig config =
-        new AutocompleteConfig(io.github.autocomplete.util.Levenshtein::distance, 1, 1, 0.5, 1.0);
+        new AutocompleteConfig(io.github.autocomplete.distance.Levenshtein::distance, 1, 1, 0.5, 1.0);
     provider = new AutocompleteProvider(textAnalyzer, config, 10);
     provider.addText("apple ample apply");
     List<Candidate> completions = provider.getAutocomplete("aple", 10);
@@ -156,7 +156,7 @@ class AutocompleteProviderTest {
   @Test
   void getAutocompleteTypoToleranceThreshold() {
     AutocompleteConfig config =
-        new AutocompleteConfig(io.github.autocomplete.util.Levenshtein::distance, 5, 1, 0.5, 1.0);
+        new AutocompleteConfig(io.github.autocomplete.distance.Levenshtein::distance, 5, 1, 0.5, 1.0);
     provider = new AutocompleteProvider(textAnalyzer, config, 10);
     provider.addText("apple ample apply");
     List<Candidate> completions = provider.getAutocomplete("app", 10);
@@ -168,7 +168,7 @@ class AutocompleteProviderTest {
   @Test
   void getAutocompleteTypoToleranceWeights() {
     AutocompleteConfig config =
-        new AutocompleteConfig(io.github.autocomplete.util.Levenshtein::distance, 1, 1, 0.1, 1.0);
+        new AutocompleteConfig(io.github.autocomplete.distance.Levenshtein::distance, 1, 1, 0.1, 1.0);
     provider = new AutocompleteProvider(textAnalyzer, config, 10);
     provider.addText("apple apple ample");
     List<Candidate> completions = provider.getAutocomplete("aple", 10);
@@ -200,7 +200,7 @@ class AutocompleteProviderTest {
   @Test
   void getAutocompleteCacheSimilarPrefixCache() {
     AutocompleteConfig config =
-        new AutocompleteConfig(io.github.autocomplete.util.Levenshtein::distance, 1, 1, 0.5, 1.0);
+        new AutocompleteConfig(io.github.autocomplete.distance.Levenshtein::distance, 1, 1, 0.5, 1.0);
     provider = new AutocompleteProvider(textAnalyzer, config, 10);
     provider.addText("apple ample apply");
     // First call populates similarPrefixCache

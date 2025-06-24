@@ -266,7 +266,7 @@ class AutocompleteProviderStressTest {
   void getAutocompleteTypoTolerancePerformance() {
     String largeText = generateLargeText(LARGE_DATA_SIZE);
     AutocompleteConfig config =
-        new AutocompleteConfig(io.github.autocomplete.util.Levenshtein::distance, 3, 1, 0.5, 1.0);
+        new AutocompleteConfig(io.github.autocomplete.distance.Levenshtein::distance, 3, 1, 0.5, 1.0);
     provider = new AutocompleteProvider(textAnalyzer, config, 100);
     provider.addText(largeText);
     long totalDuration = 0;
@@ -289,7 +289,7 @@ class AutocompleteProviderStressTest {
   void getAutocompleteTypoToleranceCacheStress() {
     String largeText = generateLargeText(LARGE_DATA_SIZE);
     AutocompleteConfig config =
-        new AutocompleteConfig(io.github.autocomplete.util.Levenshtein::distance, 3, 1, 0.5, 1.0);
+        new AutocompleteConfig(io.github.autocomplete.distance.Levenshtein::distance, 3, 1, 0.5, 1.0);
     provider = new AutocompleteProvider(textAnalyzer, config, 100);
     provider.addText(largeText);
     for (int i = 0; i < QUERY_COUNT; i++) {

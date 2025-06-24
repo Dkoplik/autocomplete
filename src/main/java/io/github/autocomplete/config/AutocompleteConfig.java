@@ -1,7 +1,7 @@
 package io.github.autocomplete.config;
 
-import io.github.autocomplete.util.Levenshtein;
 import java.util.function.BiFunction;
+import io.github.autocomplete.distance.Levenshtein;
 
 /**
  * Конфигурация автодополнения.

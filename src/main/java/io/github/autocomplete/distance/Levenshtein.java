@@ -1,4 +1,4 @@
-package io.github.autocomplete.util;
+package io.github.autocomplete.distance;
 
 /**
  * Класс для вычисления расстояния Левенштейна между двумя строками.

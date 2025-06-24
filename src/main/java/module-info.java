@@ -22,12 +22,14 @@
  *   на случай если работы стандартного токенизатора недостаточно</li>
  * </ul>
  * 
- * @since 1.0
+ * @since 1.0.1
  */
 module io.github.autocomplete {
   exports io.github.autocomplete;
   
   exports io.github.autocomplete.config;
+
+  exports io.github.autocomplete.distance;
   
   exports io.github.autocomplete.model;
   
