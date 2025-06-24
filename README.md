@@ -29,9 +29,9 @@
 ```
 
 После этого появятся следующие файлы:
-- `build/libs/autocomplete-1.0-SNAPSHOT.jar` - главный JAR с библиотекой
-- `build/libs/autocomplete-1.0-SNAPSHOT-sources.jar` - JAR с исходниками (для IDE)
-- `build/libs/autocomplete-1.0-SNAPSHOT-javadoc.jar` - JAR с документацией
+- `build/libs/autocomplete-1.0.1-SNAPSHOT.jar` - главный JAR с библиотекой
+- `build/libs/autocomplete-1.0.1-SNAPSHOT-sources.jar` - JAR с исходниками (для IDE)
+- `build/libs/autocomplete-1.0.1-SNAPSHOT-javadoc.jar` - JAR с документацией
 
 ### Запуск тестов
 ```bash
@@ -72,3 +72,6 @@ public class Example {
     }
 }
 ``` 
+
+## Демонстрация работы
+В качестве демонстрации работы библиотеки был написан простой GUI текстовый редактор с автозаполнением: [autocomplete-demo](https://github.com/Dkoplik/autocomplete-demo).
